@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Player : Area2D
+public partial class Player : CharacterBody2D
 {
 	[Export]
     public int Speed { get; set; } = 50; // How fast the player will move (pixels/sec).
@@ -16,7 +16,10 @@ public partial class Player : Area2D
    		ScreenSize = GetViewportRect().Size;
 	}
 
-	public override void _Process(double delta)
+	[Signal]
+	public delegate void HitEventHandler();
+
+	public override void _PhysicsProcess(double delta)
 	{
     	var velocity = Vector2.Zero; // The player's movement vector.
 		var rotation = GlobalRotation;
@@ -41,10 +44,7 @@ public partial class Player : Area2D
     	    velocity = velocity.Normalized() * Speed;
     	}
 
-		Position += velocity * (float)delta;
-		Position = new Vector2(
-    		x: Mathf.Clamp(Position.X, 0, ScreenSize.X),
-    		y: Mathf.Clamp(Position.Y, 0, ScreenSize.Y)
-		);
+        Velocity = velocity;
+		MoveAndSlide();
 	}
 }
