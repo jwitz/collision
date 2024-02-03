@@ -17,7 +17,7 @@ public partial class Player : CharacterBody2D
 	}
 
 	[Signal]
-	public delegate void HitEventHandler();
+	public delegate void HitEventHandler(Vector2 collisionPosition);
 
 	public override void _PhysicsProcess(double delta)
 	{
@@ -46,5 +46,17 @@ public partial class Player : CharacterBody2D
 
         Velocity = velocity;
 		MoveAndSlide();
+		int collideCount = 0;
+		for (int i = 0; i < GetSlideCollisionCount(); i++)
+		{
+			// Send position data for first collision to main scene so that fog is removed
+			if (collideCount == 0)
+			{
+		    	Vector2 collisionPosition = GetSlideCollision(i).GetPosition();
+				EmitSignal(SignalName.Hit, collisionPosition);
+				collideCount++;
+				break;
+			}
+		}
 	}
 }

@@ -9,8 +9,8 @@ radius = 64.0078
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_vgrdx")
 
-[node name="Sprite2D" type="Sprite2D" parent="."]
-texture = ExtResource("2_sr2q0")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_n1bww")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_sr2q0")
