@@ -4,13 +4,13 @@
 [ext_resource type="Texture2D" uid="uid://c0c8cg2f8uqw4" path="res://robot.png" id="2_sr2q0"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_n1bww"]
-radius = 64.0078
+radius = 60.1332
 
 [node name="Player" type="CharacterBody2D"]
 script = ExtResource("1_vgrdx")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
-shape = SubResource("CircleShape2D_n1bww")
-
 [node name="Sprite2D" type="Sprite2D" parent="."]
 texture = ExtResource("2_sr2q0")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_n1bww")

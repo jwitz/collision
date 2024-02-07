@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Main : Node
+public partial class Main : Node2D
 {
     private ImageTexture CircleTexture  { get; set; } = new ImageTexture();
     public Image FogImage { get; set; }
@@ -18,8 +18,8 @@ public partial class Main : Node
         Fog.Texture = FogTexture;
 
         // Load image we'll use to reveal the map
-        Image CircleImage = ImageLoad("res://circle-48.png");
-        CircleImage.Resize(CircleImage.GetWidth()*2, CircleImage.GetHeight()*2);
+        Image CircleImage = ImageLoad("res://circle-128.png");
+        CircleImage.Resize(CircleImage.GetWidth(), CircleImage.GetHeight());
         CircleImage.Convert(Image.Format.Rgbah);
         CircleTexture = ImageTexture.CreateFromImage(CircleImage);        
     }
@@ -29,10 +29,22 @@ public partial class Main : Node
         // Load details of dissolve circle
         var circleImage = CircleTexture.GetImage();
         var circleRect = circleImage.GetUsedRect();
-        // var dissolvePosition = collisionPosition - (circleRect.Size / 2);
+        var dissolvePosition = collisionPosition - (circleRect.Size / 2);
 
         // Create new texture with white detection circle blended in
-        FogImage.BlendRect(circleImage, (Rect2I)circleRect, (Vector2I)collisionPosition);
+        FogImage.BlendRect(circleImage, (Rect2I)circleRect, (Vector2I)dissolvePosition);
+        UpdateFogImageTexture();
+    }
+
+    private void OnPlayerMove(Vector2 playerPosition)
+    {
+        // Load details of dissolve circle
+        var circleImage = CircleTexture.GetImage();
+        var circleRect = circleImage.GetUsedRect();
+        var dissolvePosition = playerPosition - (circleRect.Size / 2);
+
+        // Create new texture with white detection circle blended in
+        FogImage.BlendRect(circleImage, (Rect2I)circleRect, (Vector2I)dissolvePosition);
         UpdateFogImageTexture();
     }
 
@@ -43,7 +55,7 @@ public partial class Main : Node
         Fog.Texture = FogTexture;
     }
 
-    // Helper function to avoid image loar warning
+    // Helper function to avoid image load warning
     public static Image ImageLoad(String filepath)
     {
         var image = new Image();

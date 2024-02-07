@@ -19,6 +19,9 @@ public partial class Player : CharacterBody2D
 	[Signal]
 	public delegate void HitEventHandler(Vector2 collisionPosition);
 
+	[Signal]
+	public delegate void MoveEventHandler(Vector2 playerPosition);
+
 	public override void _PhysicsProcess(double delta)
 	{
     	var velocity = Vector2.Zero; // The player's movement vector.
@@ -46,6 +49,12 @@ public partial class Player : CharacterBody2D
 
         Velocity = velocity;
 		MoveAndSlide();
+		if(velocity.X != 0 && velocity.Y != 0)
+		{
+			// Send position data for player to clean the floor
+			Vector2 playerPosition = GetNode<CharacterBody2D>(this.GetPath()).GlobalPosition;
+			EmitSignal(SignalName.Move, playerPosition);
+		}
 		int collideCount = 0;
 		for (int i = 0; i < GetSlideCollisionCount(); i++)
 		{
