@@ -1,0 +1,19 @@
+[gd_scene load_steps=2 format=3 uid="uid://v70agcdi4i4x"]
+
+[ext_resource type="Texture2D" uid="uid://bicycmj4e0dkn" path="res://Man.png" id="1_webbf"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("1_webbf")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+scale = Vector2(0.5, 0.5)
+polygon = PackedVector2Array(-126, -231, -178, -241, -220, -282, -242, -330, -266, -349, -259, -368, -229, -369, -216, -336, -203, -299, -127, -257, -98, -263, -93, -297, -125, -385, -112, -432, -85, -481, -49, -484, -13, -424, -9, -361, -33, -299, -20, -270, 13, -308, 24, -389, 20, -438, 49, -451, 58, -430, 51, -314, 26, -255, -7, -231, 7, -172, 16, -94, -13, -6, 3, 107, 61, 42, 102, 51, 123, 79, 97, 90, 74, 75, 14, 148, -12, 149, -45, 25, -65, 38, -82, 139, -79, 192, -57, 243, -63, 274, -122, 273, -122, 249, -98, 242, -125, 178, -116, 42, -120, -12, -142, -82, -141, -165)
+
+[node name="CollisionPolygon2D2" type="CollisionPolygon2D" parent="StaticBody2D"]
+scale = Vector2(0.5, 0.5)
+polygon = PackedVector2Array(-365, -402, -398, -419, -386, -439, -342, -442, -308, -422, -337, -406)

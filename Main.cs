@@ -11,8 +11,8 @@ public partial class Main : Node2D
     public override void _Ready()
     {
         // Fill map out with darkness. 
-        Fog = GetNode<Sprite2D>("Fog");
-        FogImage = Image.Create(900, 900, false, Image.Format.Rgbah);
+        Fog = GetNode<Sprite2D>("FogContainer/Fog");
+        FogImage = Image.Create(2700, 2700, false, Image.Format.Rgba8);
         FogImage.Fill(Colors.Black);
         FogTexture.SetImage(FogImage);
         Fog.Texture = FogTexture;
@@ -20,7 +20,7 @@ public partial class Main : Node2D
         // Load image we'll use to reveal the map
         Image CircleImage = ImageLoad("res://circle-128.png");
         CircleImage.Resize(CircleImage.GetWidth(), CircleImage.GetHeight());
-        CircleImage.Convert(Image.Format.Rgbah);
+        CircleImage.Convert(Image.Format.Rgba8);
         CircleTexture = ImageTexture.CreateFromImage(CircleImage);        
     }
 
@@ -50,7 +50,6 @@ public partial class Main : Node2D
 
     public void UpdateFogImageTexture()
     {
-        Fog = GetNode<Sprite2D>("Fog");
         FogTexture = ImageTexture.CreateFromImage(FogImage);
         Fog.Texture = FogTexture;
     }
@@ -58,8 +57,7 @@ public partial class Main : Node2D
     // Helper function to avoid image load warning
     public static Image ImageLoad(String filepath)
     {
-        var image = new Image();
-        image = Image.LoadFromFile(ProjectSettings.GlobalizePath(filepath));
+        var image = Image.LoadFromFile(ProjectSettings.GlobalizePath(filepath));
         return image;
     }
 

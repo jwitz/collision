@@ -4,7 +4,11 @@ using System;
 public partial class Player : CharacterBody2D
 {
 	[Export]
-    public int Speed { get; set; } = 50; // How fast the player will move (pixels/sec).
+    public int MaxSpeed { get; set; } = 70; // How fast the player will move (pixels/sec).
+	public int Acceleration { get; set; } = 2; // How fast the player will accelerate
+	public int Speed { get; set; } = 0; // How fast the player will move (pixels/sec).
+	public float Deceleration = 0.20f;
+	public int FrameCount { get; set; } = 0;
 
     public Vector2 ScreenSize; // Size of the game window.
 
@@ -44,28 +48,38 @@ public partial class Player : CharacterBody2D
     	}
     	if (velocity.Length() > 0)
     	{
+			// Accelerate the player up to top speed
+			int accelSpeed = Speed + 1;
+			Speed = Math.Min(accelSpeed, MaxSpeed);
     	    velocity = velocity.Normalized() * Speed;
+			Velocity = velocity;
     	}
-
-        Velocity = velocity;
-		MoveAndSlide();
-		if(velocity.X != 0 && velocity.Y != 0)
+		else
+		{
+			// Decelerate the player
+			Speed = 0;
+			Velocity = Velocity.Lerp(Vector2.Zero, Deceleration);
+		}
+		if(Velocity.X != 0 && Velocity.Y != 0)
 		{
 			// Send position data for player to clean the floor
 			Vector2 playerPosition = GetNode<CharacterBody2D>(this.GetPath()).GlobalPosition;
-			EmitSignal(SignalName.Move, playerPosition);
-		}
-		int collideCount = 0;
-		for (int i = 0; i < GetSlideCollisionCount(); i++)
-		{
-			// Send position data for first collision to main scene so that fog is removed
-			if (collideCount == 0)
+			if (FrameCount % 4 == 0)
 			{
-		    	Vector2 collisionPosition = GetSlideCollision(i).GetPosition();
-				EmitSignal(SignalName.Hit, collisionPosition);
-				collideCount++;
-				break;
+				EmitSignal(SignalName.Move, playerPosition);
 			}
+			
 		}
+		
+		MoveAndSlide();
+
+		if (Speed == MaxSpeed && GetSlideCollisionCount() > 0 && FrameCount % 5 == 0)
+		{
+		    Vector2 collisionPosition = GetSlideCollision(0).GetPosition();
+			EmitSignal(SignalName.Hit, collisionPosition);
+			FrameCount = 0;
+		}
+
+		FrameCount++;
 	}
 }

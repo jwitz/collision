@@ -10,6 +10,8 @@ radius = 60.1332
 script = ExtResource("1_vgrdx")
 
 [node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-2.38419e-07, 2.38419e-07)
+scale = Vector2(1.01562, 1.01562)
 texture = ExtResource("2_sr2q0")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
