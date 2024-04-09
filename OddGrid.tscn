@@ -1,0 +1,35 @@
+[gd_scene load_steps=5 format=3 uid="uid://0q32o6ni6kye"]
+
+[ext_resource type="Texture2D" uid="uid://juvh6o2pdni2" path="res://OddGrid.png" id="1_ayjma"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qny1p"]
+size = Vector2(128, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8iw8i"]
+size = Vector2(128, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_juhqt"]
+size = Vector2(128, 16)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_ayjma")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, -52)
+shape = SubResource("RectangleShape2D_qny1p")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, -12)
+shape = SubResource("RectangleShape2D_qny1p")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, 26)
+shape = SubResource("RectangleShape2D_8iw8i")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(0, 56)
+shape = SubResource("RectangleShape2D_juhqt")

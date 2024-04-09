@@ -1,0 +1,26 @@
+[gd_scene load_steps=4 format=3 uid="uid://e0o3f32v7mj3"]
+
+[ext_resource type="Texture2D" uid="uid://j3ck74idei7s" path="res://OddShape.png" id="1_cnrj0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_h6a4x"]
+radius = 46.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kivsp"]
+size = Vector2(286, 233)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-293.5, 293.5)
+scale = Vector2(0.426758, 0.426758)
+texture = ExtResource("1_cnrj0")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-291, 278)
+shape = SubResource("CircleShape2D_h6a4x")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-292, 394.5)
+shape = SubResource("RectangleShape2D_kivsp")
