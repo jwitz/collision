@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://bwx18b5re8i1u"]
+[gd_scene load_steps=8 format=3 uid="uid://bwx18b5re8i1u"]
 
 [ext_resource type="Texture2D" uid="uid://ciimsgojxkcdh" path="res://Abstract.png.png" id="1_52s8h"]
+[ext_resource type="PackedScene" uid="uid://e0o3f32v7mj3" path="res://OddShape.tscn" id="2_vlduk"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_vpg6i"]
 radius = 53.0
@@ -46,3 +47,6 @@ shape = SubResource("CircleShape2D_fpax0")
 [node name="CollisionShape2D5" type="CollisionShape2D" parent="StaticBody2D"]
 position = Vector2(70, 84)
 shape = SubResource("CircleShape2D_5i308")
+
+[node name="Node2D" parent="." instance=ExtResource("2_vlduk")]
+position = Vector2(927, 1080)

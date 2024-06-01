@@ -1,0 +1,9 @@
+[gd_scene load_steps=2 format=3 uid="uid://c606bm4awj4xi"]
+
+[ext_resource type="TileSet" uid="uid://cqncmr7s64cap" path="res://Hold.tres" id="1_htjiw"]
+
+[node name="Node2D" type="Node2D"]
+
+[node name="TileMapHold" type="TileMap" parent="."]
+tile_set = ExtResource("1_htjiw")
+format = 2

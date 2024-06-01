@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Numerics;
 
 public partial class Main : Node2D
 {
@@ -10,7 +11,10 @@ public partial class Main : Node2D
     public int BatteryCount { get; set; } = 4;
     public Sprite2D[] BatteryLines { get; set; } = new Sprite2D[5];
     public bool IsLightOn = true;
-    
+    public int CleanCount { get; set; } = 0;
+    public int TotalTileCount { get; set; }
+    public TileMap Area { get; set; }
+
     public override void _Ready()
     {
         // Fill map out with darkness. 
@@ -32,15 +36,26 @@ public partial class Main : Node2D
         BatteryLines[2] = GetNode<Sprite2D>("Player/Hud/BatteryLine2"); 
         BatteryLines[3] = GetNode<Sprite2D>("Player/Hud/BatteryLine3"); 
         BatteryLines[4] = GetNode<Sprite2D>("Player/Hud/BatteryLine4"); 
+
+        //Get total tiles to clean
+        Godot.Collections.Array<Godot.Vector2I> TotalTiles = GetNode<LevelMap>("LevelMap").GetUsedCells(0);
+        TotalTileCount = TotalTiles.Count;
     }
 
-    public override void _Process(double delta)
+    private void OnPlayerClean(int column, int row)
     {
-        
+        if (GetNode<LevelMap>("LevelMap").GetTileStatus(column, row) == false)
+        {
+            GD.Print("Cleaning tile...");
+            GetNode<LevelMap>("LevelMap").CleanTile(column, row);
+            CleanCount++;
+            GD.Print("Player Cleaned!");
+            GD.Print("Tiles cleaned:" + CleanCount + "/" + TotalTileCount);
+        }
     }
 
 
-    private void OnPlayerHit(Vector2 collisionPosition)
+    private void OnPlayerHit(Godot.Vector2 collisionPosition)
     {
         // Load details of dissolve circle
         var circleImage = CircleTexture.GetImage();
@@ -52,7 +67,7 @@ public partial class Main : Node2D
         UpdateFogImageTexture();
     }
 
-    private void OnPlayerMove(Vector2 playerPosition)
+    private void OnPlayerMove(Godot.Vector2 playerPosition)
     {
         // Load details of dissolve circle
         var circleImage = CircleTexture.GetImage();

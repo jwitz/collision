@@ -13,6 +13,7 @@ public partial class Player : CharacterBody2D
 	public float StartingRotation {get; set; }
 	public double RotationTimer {get; set; } = 0.0;
 	public int FrameCount { get; set; } = 0;
+	public Rid LastTile { get; set; }
 
 	public static float DoubleDelay = 0.12f;
 	public float DoubleTapTime { get; set; } = DoubleDelay;
@@ -29,6 +30,15 @@ public partial class Player : CharacterBody2D
 	[Export]
 	public float Sensitivity { get; set; } = 0.40f;
 
+	[Signal]
+	public delegate void HitEventHandler(Vector2 collisionPosition);
+
+	[Signal]
+	public delegate void MoveEventHandler(Vector2 playerPosition);
+
+	[Signal]
+	public delegate void CleanEventHandler();
+
 	public override void _Ready()
 	{
    		ScreenSize = GetViewportRect().Size;
@@ -36,11 +46,6 @@ public partial class Player : CharacterBody2D
 		FlickerTimer = GetNode<Timer>("FlickerTimer");
 	}
 
-	[Signal]
-	public delegate void HitEventHandler(Vector2 collisionPosition);
-
-	[Signal]
-	public delegate void MoveEventHandler(Vector2 playerPosition);
 
     public override void _PhysicsProcess(double delta)
 	{
@@ -155,6 +160,18 @@ public partial class Player : CharacterBody2D
 		}
 
 		FrameCount++;
+	}
+
+	private void OnHooverBodyShapeEntered(Rid bodyRid, Node2D body, int bodyShapeIndex, int localShapeIndex)
+	{
+		if (LastTile != bodyRid)
+		{
+			TileMap currentTileMap = (TileMap) body;
+			Vector2I tileCoords = currentTileMap.GetCoordsForBodyRid(bodyRid);
+			GD.Print("Cleaning tile...");
+			EmitSignal(SignalName.Clean, tileCoords.X, tileCoords.Y);
+			LastTile = bodyRid;
+		}
 	}
 
 }
