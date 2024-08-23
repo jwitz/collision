@@ -13,10 +13,6 @@ public partial class Hoover : Area2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if (FrameCount % 4 == 0)
-		{
-			EmitSignal(SignalName.BodyShapeEntered);
-		}
-		FrameCount++;
+		
 	}
 }

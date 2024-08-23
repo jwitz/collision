@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Numerics;
 
 public partial class Player : CharacterBody2D
 {
@@ -14,15 +15,15 @@ public partial class Player : CharacterBody2D
 	public double RotationTimer {get; set; } = 0.0;
 	public int FrameCount { get; set; } = 0;
 	public Rid LastTile { get; set; }
-
 	public static float DoubleDelay = 0.12f;
 	public float DoubleTapTime { get; set; } = DoubleDelay;
 	public bool IsConsumingBattery { get; set; } = false;
+	public bool CanMove { get; set; } = false;
 
 
 	public InputEventAction lastInput = new InputEventAction();
 
-    public Vector2 ScreenSize; // Size of the game window.
+    public Godot.Vector2 ScreenSize; // Size of the game window.
 
 	public Timer BatteryTimer;
 	public Timer FlickerTimer;
@@ -31,10 +32,10 @@ public partial class Player : CharacterBody2D
 	public float Sensitivity { get; set; } = 0.40f;
 
 	[Signal]
-	public delegate void HitEventHandler(Vector2 collisionPosition);
+	public delegate void HitEventHandler(Godot.Vector2 collisionPosition);
 
 	[Signal]
-	public delegate void MoveEventHandler(Vector2 playerPosition);
+	public delegate void MoveEventHandler(Godot.Vector2 playerPosition);
 
 	[Signal]
 	public delegate void CleanEventHandler();
@@ -46,11 +47,21 @@ public partial class Player : CharacterBody2D
 		FlickerTimer = GetNode<Timer>("FlickerTimer");
 	}
 
+	public void Start(Godot.Vector2 startPos)
+	{
+		Position = startPos;
+	}
+
 
     public override void _PhysicsProcess(double delta)
 	{
+		if (CanMove == false)
+		{
+			return;
+		}
+		
 		DoubleTapTime -= (float)delta;
-    	var velocity = Vector2.Zero; // The player's movement vector.
+    	var velocity = Godot.Vector2.Zero; // The player's movement vector.
 		var rotation = GlobalRotation;
 
 		// Flip logic. Could be refactored into its own function
@@ -114,6 +125,10 @@ public partial class Player : CharacterBody2D
 			lastInput.Action = "move_forward";
 			DoubleTapTime = DoubleDelay;
     	}
+		if (lastInput.IsActionPressed("zoom"))
+		{
+			GetNode<Camera2D>("Camera").Zoom();
+		}
     	if (velocity.Length() > 0)
     	{
 			// Accelerate the player up to top speed and start battery timer
@@ -135,14 +150,14 @@ public partial class Player : CharacterBody2D
 		{
 			// Decelerate the player
 			Speed = 0;
-			Velocity = Velocity.Lerp(Vector2.Zero, Deceleration);
+			Velocity = Velocity.Lerp(Godot.Vector2.Zero, Deceleration);
 			BatteryTimer.Paused = true;
 			IsConsumingBattery = false;
 		}
 		if(Velocity.X != 0 && Velocity.Y != 0)
 		{
 			// Send position data for player to clean the floor
-			Vector2 playerPosition = GetNode<CharacterBody2D>(this.GetPath()).GlobalPosition;
+			Godot.Vector2 playerPosition = GetNode<CharacterBody2D>(this.GetPath()).GlobalPosition;
 			if (FrameCount % 4 == 0)
 			{
 				EmitSignal(SignalName.Move, playerPosition);
@@ -154,7 +169,7 @@ public partial class Player : CharacterBody2D
 
 		if (Speed == MaxSpeed && GetSlideCollisionCount() > 0 && FrameCount % 5 == 0)
 		{
-		    Vector2 collisionPosition = GetSlideCollision(0).GetPosition();
+		    Godot.Vector2 collisionPosition = GetSlideCollision(0).GetPosition();
 			EmitSignal(SignalName.Hit, collisionPosition);
 			FrameCount = 0;
 		}

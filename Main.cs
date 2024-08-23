@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Linq;
 using System.Numerics;
 
 public partial class Main : Node2D
@@ -15,31 +16,12 @@ public partial class Main : Node2D
     public int TotalTileCount { get; set; }
     public TileMap Area { get; set; }
 
+    [Signal]
+    public delegate void ShowGameOverEventHandler();
+
     public override void _Ready()
     {
-        // Fill map out with darkness. 
-        Fog = GetNode<Sprite2D>("FogContainer/Fog");
-        FogImage = Image.Create(2700, 2700, false, Image.Format.Rgba8);
-        FogImage.Fill(Colors.Black);
-        FogTexture.SetImage(FogImage);
-        Fog.Texture = FogTexture;
-
-        // Load image we'll use to reveal the map
-        Image CircleImage = ImageLoad("res://circle-128.png");
-        CircleImage.Resize(CircleImage.GetWidth(), CircleImage.GetHeight());
-        CircleImage.Convert(Image.Format.Rgba8);
-        CircleTexture = ImageTexture.CreateFromImage(CircleImage);  
-
-        //Load batteries
-        BatteryLines[0] = GetNode<Sprite2D>("Player/Hud/BatteryLine0"); 
-        BatteryLines[1] = GetNode<Sprite2D>("Player/Hud/BatteryLine1"); 
-        BatteryLines[2] = GetNode<Sprite2D>("Player/Hud/BatteryLine2"); 
-        BatteryLines[3] = GetNode<Sprite2D>("Player/Hud/BatteryLine3"); 
-        BatteryLines[4] = GetNode<Sprite2D>("Player/Hud/BatteryLine4"); 
-
-        //Get total tiles to clean
-        Godot.Collections.Array<Godot.Vector2I> TotalTiles = GetNode<LevelMap>("LevelMap").GetUsedCells(0);
-        TotalTileCount = TotalTiles.Count;
+        return;
     }
 
     private void OnPlayerClean(int column, int row)
@@ -101,7 +83,9 @@ public partial class Main : Node2D
         }
         else 
         {
-            GD.Print("Game Over!");
+            GameOver();
+            BatteryCount = 4;
+            GetNode<Timer>("Player/BatteryTimer").Stop();
         }
     }
 
@@ -125,6 +109,72 @@ public partial class Main : Node2D
             }
         }
 
+    }
+
+    public void GameOver()
+    {
+        // Refill battery
+        for (int i = 0; i < BatteryLines.Length; i++)
+        {
+            BatteryLines[i].Visible = true;
+        }
+
+        GetNode<Player>("Player").CanMove = false;
+
+        GetNode<AudioStreamPlayer>("Music").Stop();
+
+        // Fill map out with darkness. 
+        Fog = GetNode<Sprite2D>("FogContainer/Fog");
+        FogImage = Image.Create(2700, 2700, false, Image.Format.Rgba8);
+        FogImage.Fill(Colors.Black);
+        FogTexture.SetImage(FogImage);
+        Fog.Texture = FogTexture;
+        EmitSignal(SignalName.ShowGameOver, CleanCount, TotalTileCount, true);
+    }
+
+    public void StartGame()
+    {
+
+        GetNode<Player>("Player").Start(GetNode<Marker2D>("StartPos").Position);
+
+        // Fill map out with darkness. 
+        Fog = GetNode<Sprite2D>("FogContainer/Fog");
+        FogImage = Image.Create(2700, 2700, false, Image.Format.Rgba8);
+        FogImage.Fill(Colors.Black);
+        FogTexture.SetImage(FogImage);
+        Fog.Texture = FogTexture;
+
+        // Load image we'll use to reveal the map
+        Image CircleImage = ImageLoad("res://Pixel-128.png");
+        CircleImage.Resize(CircleImage.GetWidth(), CircleImage.GetHeight());
+        CircleImage.Convert(Image.Format.Rgba8);
+        CircleTexture = ImageTexture.CreateFromImage(CircleImage);  
+
+        //Load batteries
+        BatteryLines[0] = GetNode<Sprite2D>("Player/Hud/BatteryLine0"); 
+        BatteryLines[1] = GetNode<Sprite2D>("Player/Hud/BatteryLine1"); 
+        BatteryLines[2] = GetNode<Sprite2D>("Player/Hud/BatteryLine2"); 
+        BatteryLines[3] = GetNode<Sprite2D>("Player/Hud/BatteryLine3"); 
+        BatteryLines[4] = GetNode<Sprite2D>("Player/Hud/BatteryLine4"); 
+
+        //Get total tiles to clean
+        Godot.Collections.Array<Godot.Vector2I> TotalTiles = GetNode<LevelMap>("LevelMap").GetUsedCells(0);
+        TotalTileCount = TotalTiles.Count;
+
+        //Start battery timer and allow player to move
+        GetNode<Timer>("Player/FlickerTimer").Start();
+        GetNode<Player>("Player").CanMove = true;
+
+        GetNode<AudioStreamPlayer>("Music").Play();
+
+    }
+
+    private void OnMenuResetGame()
+    {
+        //Reset player position and score
+        GetNode<Player>("Player").Start(GetNode<Marker2D>("StartPos").Position);
+        CleanCount = 0;
+        GetNode<LevelMap>("LevelMap").ResetTileMap();
     }
 
 

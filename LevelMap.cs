@@ -17,6 +17,11 @@ public partial class LevelMap : TileMap
 		}
     }
 
+	public void ResetTileMap()
+	{
+		_Ready();
+	}
+
 	public void CleanTile(int column, int row)
 	{
 		tileLocation[column, row] = true;
