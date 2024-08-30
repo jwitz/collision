@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://c25bis3mrx143"]
+[gd_scene load_steps=4 format=3 uid="uid://50dt2udvpxam"]
 
 [ext_resource type="FontFile" uid="uid://bpnu6m02u3p5v" path="res://novem___.ttf" id="1_gdfv8"]
 [ext_resource type="Script" path="res://Menu.cs" id="1_vkm37"]

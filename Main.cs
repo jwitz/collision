@@ -21,6 +21,7 @@ public partial class Main : Node2D
 
     public override void _Ready()
     {
+        GetNode<CanvasLayer>("CanvasLayer").Hide();
         return;
     }
 
@@ -151,11 +152,12 @@ public partial class Main : Node2D
         CircleTexture = ImageTexture.CreateFromImage(CircleImage);  
 
         //Load batteries
-        BatteryLines[0] = GetNode<Sprite2D>("Player/Hud/BatteryLine0"); 
-        BatteryLines[1] = GetNode<Sprite2D>("Player/Hud/BatteryLine1"); 
-        BatteryLines[2] = GetNode<Sprite2D>("Player/Hud/BatteryLine2"); 
-        BatteryLines[3] = GetNode<Sprite2D>("Player/Hud/BatteryLine3"); 
-        BatteryLines[4] = GetNode<Sprite2D>("Player/Hud/BatteryLine4"); 
+        BatteryLines[0] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine0"); 
+        BatteryLines[1] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine1"); 
+        BatteryLines[2] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine2"); 
+        BatteryLines[3] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine3"); 
+        BatteryLines[4] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine4");
+        GetNode<CanvasLayer>("CanvasLayer").Show(); 
 
         //Get total tiles to clean
         Godot.Collections.Array<Godot.Vector2I> TotalTiles = GetNode<LevelMap>("LevelMap").GetUsedCells(0);

@@ -125,10 +125,6 @@ public partial class Player : CharacterBody2D
 			lastInput.Action = "move_forward";
 			DoubleTapTime = DoubleDelay;
     	}
-		if (lastInput.IsActionPressed("zoom"))
-		{
-			GetNode<Camera2D>("Camera").Zoom();
-		}
     	if (velocity.Length() > 0)
     	{
 			// Accelerate the player up to top speed and start battery timer
