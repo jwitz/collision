@@ -37,10 +37,10 @@ anchor_left = 0.5
 anchor_top = 0.951
 anchor_right = 0.5
 anchor_bottom = 0.951
-offset_left = -64.0
-offset_top = -85.248
-offset_right = 64.0
-offset_bottom = -0.248047
+offset_left = -120.0
+offset_top = -198.248
+offset_right = 120.0
+offset_bottom = -16.248
 grow_horizontal = 2
 grow_vertical = 0
 theme_override_fonts/font = ExtResource("1_gdfv8")
@@ -48,6 +48,7 @@ theme_override_font_sizes/font_size = 30
 text = "Move: ↑
 Rotate: ← / →
 180: ←← / →→
+Zoom: Spacebar
 Start: Press X"
 horizontal_alignment = 1
 vertical_alignment = 1
