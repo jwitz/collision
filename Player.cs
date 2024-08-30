@@ -64,9 +64,10 @@ public partial class Player : CharacterBody2D
     	var velocity = Godot.Vector2.Zero; // The player's movement vector.
 		var rotation = GlobalRotation;
 
-		// Flip logic. Could be refactored into its own function
+		// Flip/ double tap logic. Uses linear interpretation over time to keep moving the player after a double tap.
 		if(IsRotating == true)
 		{
+			// Check if linear interpretation is complete, ending the rotation.
 			if (RotationTimer >= 1.0)
 			{
 				IsRotating = false;
@@ -125,10 +126,6 @@ public partial class Player : CharacterBody2D
 			lastInput.Action = "move_forward";
 			DoubleTapTime = DoubleDelay;
     	}
-		if (lastInput.IsActionPressed("zoom"))
-		{
-			GetNode<Camera2D>("Camera").Zoom();
-		}
     	if (velocity.Length() > 0)
     	{
 			// Accelerate the player up to top speed and start battery timer
