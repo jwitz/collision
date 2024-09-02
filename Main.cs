@@ -1,11 +1,12 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
 public partial class Main : Node2D
 {
-    private ImageTexture CircleTexture  { get; set; } = new ImageTexture();
+    private ImageTexture[] CircleTexture  { get; set; }
     public Image FogImage { get; set; }
     public Sprite2D Fog { get; set; }
     public ImageTexture FogTexture { get; set; } = new ImageTexture();
@@ -57,7 +58,7 @@ public partial class Main : Node2D
         var circleRect = circleImage.GetUsedRect();
         var dissolvePosition = playerPosition - (circleRect.Size / 2);
 
-        // Create new texture with white detection circle blended in
+        // Create new texture with white dissolve circle blended in
         FogImage.BlendRect(circleImage, (Rect2I)circleRect, (Vector2I)dissolvePosition);
         UpdateFogImageTexture();
     }
@@ -145,11 +146,34 @@ public partial class Main : Node2D
         FogTexture.SetImage(FogImage);
         Fog.Texture = FogTexture;
 
-        // Load image we'll use to reveal the map
-        Image CircleImage = ImageLoad("res://Pixel-128.png");
-        CircleImage.Resize(CircleImage.GetWidth(), CircleImage.GetHeight());
-        CircleImage.Convert(Image.Format.Rgba8);
-        CircleTexture = ImageTexture.CreateFromImage(CircleImage);  
+        // Load images we'll use to reveal the map
+        List<Image> circleImage = new List<Image>();
+        int imageCount = 0;
+        using var dir = DirAccess.Open("res://Circles");
+        if (dir != null)
+        {
+            dir.ListDirBegin();
+            string fileName = dir.GetNext();
+            while (fileName != "")
+            {
+                Image loadImage = ImageLoad("res://Pixel-128.png");
+                loadImage.Resize(loadImage.GetWidth(), loadImage.GetHeight());
+                loadImage.Convert(Image.Format.Rgba8);
+                circleImage.Add(loadImage);
+                fileName = dir.GetNext();
+                imageCount++;
+            }
+        }
+        else
+        {
+            GD.Print("An error occurred when trying to access the path.");
+        }
+        CircleTexture = new ImageTexture[imageCount];
+        
+        for (int i = 0; i < imageCount; i++)
+        {
+            CircleTexture[i] = ImageTexture.CreateFromImage(circleImage[i]);
+        } 
 
         //Load batteries
         BatteryLines[0] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine0"); 

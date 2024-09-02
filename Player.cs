@@ -155,7 +155,7 @@ public partial class Player : CharacterBody2D
 		{
 			// Send position data for player to clean the floor
 			Godot.Vector2 playerPosition = GetNode<CharacterBody2D>(this.GetPath()).GlobalPosition;
-			if (FrameCount % 4 == 0)
+			if (FrameCount % 11 == 0)
 			{
 				EmitSignal(SignalName.Move, playerPosition);
 			}
