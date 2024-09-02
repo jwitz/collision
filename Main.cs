@@ -14,6 +14,7 @@ public partial class Main : Node2D
     public Sprite2D[] BatteryLines { get; set; } = new Sprite2D[5];
     public bool IsLightOn = true;
     public int CleanCount { get; set; } = 0;
+    public int ImageCount { get; set; } = 0;
     public int TotalTileCount { get; set; }
     public TileMap Area { get; set; }
 
@@ -22,6 +23,7 @@ public partial class Main : Node2D
 
     public override void _Ready()
     {
+        GD.Randomize();
         GetNode<CanvasLayer>("CanvasLayer").Hide();
         return;
     }
@@ -42,7 +44,7 @@ public partial class Main : Node2D
     private void OnPlayerHit(Godot.Vector2 collisionPosition)
     {
         // Load details of dissolve circle
-        var circleImage = CircleTexture.GetImage();
+        var circleImage = CircleTexture[GD.Randi() % ImageCount].GetImage();
         var circleRect = circleImage.GetUsedRect();
         var dissolvePosition = collisionPosition - (circleRect.Size / 2);
 
@@ -54,7 +56,7 @@ public partial class Main : Node2D
     private void OnPlayerMove(Godot.Vector2 playerPosition)
     {
         // Load details of dissolve circle
-        var circleImage = CircleTexture.GetImage();
+        var circleImage = CircleTexture[GD.Randi() % ImageCount].GetImage();
         var circleRect = circleImage.GetUsedRect();
         var dissolvePosition = playerPosition - (circleRect.Size / 2);
 
@@ -148,7 +150,6 @@ public partial class Main : Node2D
 
         // Load images we'll use to reveal the map
         List<Image> circleImage = new List<Image>();
-        int imageCount = 0;
         using var dir = DirAccess.Open("res://Circles");
         if (dir != null)
         {
@@ -156,21 +157,21 @@ public partial class Main : Node2D
             string fileName = dir.GetNext();
             while (fileName != "")
             {
-                Image loadImage = ImageLoad("res://Pixel-128.png");
+                Image loadImage = ImageLoad(fileName);
                 loadImage.Resize(loadImage.GetWidth(), loadImage.GetHeight());
                 loadImage.Convert(Image.Format.Rgba8);
                 circleImage.Add(loadImage);
                 fileName = dir.GetNext();
-                imageCount++;
+                ImageCount++;
             }
         }
         else
         {
             GD.Print("An error occurred when trying to access the path.");
         }
-        CircleTexture = new ImageTexture[imageCount];
+        CircleTexture = new ImageTexture[ImageCount];
         
-        for (int i = 0; i < imageCount; i++)
+        for (int i = 0; i < ImageCount; i++)
         {
             CircleTexture[i] = ImageTexture.CreateFromImage(circleImage[i]);
         } 
