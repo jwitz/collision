@@ -6,9 +6,11 @@ public partial class Player : CharacterBody2D
 {
 	[Export]
     public int MaxSpeed { get; set; } = 70; // How fast the player will move (pixels/sec).
+	[Export]
 	public int Acceleration { get; set; } = 2; // How fast the player will accelerate
 	public int Speed { get; set; } = 0; // How fast the player will move (pixels/sec).
-	public float Deceleration = 0.20f;
+	[Export]
+	public float Deceleration = 0.20f; // How long it takes player to come to stop
 	public Boolean IsRotating { get; set; }= false;
 	public Boolean IsLeft { get; set; }= false;
 	public float StartingRotation {get; set; }
@@ -29,7 +31,7 @@ public partial class Player : CharacterBody2D
 	public Timer FlickerTimer;
 
 	[Export]
-	public float Sensitivity { get; set; } = 0.40f;
+	public float Sensitivity { get; set; } = 0.40f; //Rotation sensitivity
 
 	[Signal]
 	public delegate void HitEventHandler(Godot.Vector2 collisionPosition);

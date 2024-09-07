@@ -1,7 +1,7 @@
 [gd_scene load_steps=6 format=3 uid="uid://dc5i2i0ye4qm3"]
 
 [ext_resource type="Script" path="res://Player.cs" id="1_vgrdx"]
-[ext_resource type="Texture2D" uid="uid://c0c8cg2f8uqw4" path="res://robot.png" id="2_sr2q0"]
+[ext_resource type="Texture2D" uid="uid://fjtw0iofpji0" path="res://newplayermodel.png" id="2_oigtj"]
 [ext_resource type="Script" path="res://Hoover.cs" id="3_nudxd"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_n1bww"]
@@ -16,7 +16,7 @@ script = ExtResource("1_vgrdx")
 [node name="Sprite2D" type="Sprite2D" parent="."]
 position = Vector2(-2.38419e-07, 2.38419e-07)
 scale = Vector2(1.01562, 1.01562)
-texture = ExtResource("2_sr2q0")
+texture = ExtResource("2_oigtj")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_n1bww")
