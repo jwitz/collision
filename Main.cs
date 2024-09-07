@@ -1,11 +1,12 @@
 using Godot;
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 
 public partial class Main : Node2D
 {
-    private ImageTexture CircleTexture  { get; set; } = new ImageTexture();
+    private ImageTexture[] CircleTexture  { get; set; }
     public Image FogImage { get; set; }
     public Sprite2D Fog { get; set; }
     public ImageTexture FogTexture { get; set; } = new ImageTexture();
@@ -13,6 +14,7 @@ public partial class Main : Node2D
     public Sprite2D[] BatteryLines { get; set; } = new Sprite2D[5];
     public bool IsLightOn = true;
     public int CleanCount { get; set; } = 0;
+    public int ImageCount { get; set; } = 0;
     public int TotalTileCount { get; set; }
     public TileMap Area { get; set; }
 
@@ -21,6 +23,7 @@ public partial class Main : Node2D
 
     public override void _Ready()
     {
+        GD.Randomize();
         GetNode<CanvasLayer>("CanvasLayer").Hide();
         return;
     }
@@ -41,7 +44,7 @@ public partial class Main : Node2D
     private void OnPlayerHit(Godot.Vector2 collisionPosition)
     {
         // Load details of dissolve circle
-        var circleImage = CircleTexture.GetImage();
+        var circleImage = CircleTexture[GD.Randi() % ImageCount].GetImage();
         var circleRect = circleImage.GetUsedRect();
         var dissolvePosition = collisionPosition - (circleRect.Size / 2);
 
@@ -53,11 +56,11 @@ public partial class Main : Node2D
     private void OnPlayerMove(Godot.Vector2 playerPosition)
     {
         // Load details of dissolve circle
-        var circleImage = CircleTexture.GetImage();
+        var circleImage = CircleTexture[GD.Randi() % ImageCount].GetImage();
         var circleRect = circleImage.GetUsedRect();
         var dissolvePosition = playerPosition - (circleRect.Size / 2);
 
-        // Create new texture with white detection circle blended in
+        // Create new texture with white dissolve circle blended in
         FogImage.BlendRect(circleImage, (Rect2I)circleRect, (Vector2I)dissolvePosition);
         UpdateFogImageTexture();
     }
@@ -145,11 +148,8 @@ public partial class Main : Node2D
         FogTexture.SetImage(FogImage);
         Fog.Texture = FogTexture;
 
-        // Load image we'll use to reveal the map
-        Image CircleImage = ImageLoad("res://Pixel-128.png");
-        CircleImage.Resize(CircleImage.GetWidth(), CircleImage.GetHeight());
-        CircleImage.Convert(Image.Format.Rgba8);
-        CircleTexture = ImageTexture.CreateFromImage(CircleImage);  
+        // Load images we'll use to reveal the map
+        LoadImages();
 
         //Load batteries
         BatteryLines[0] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine0"); 
@@ -179,5 +179,41 @@ public partial class Main : Node2D
         GetNode<LevelMap>("LevelMap").ResetTileMap();
     }
 
+    private void LoadImages()
+    {
+        List<Image> circleImage = new List<Image>();
+        var dir = DirAccess.Open("res://Circles");
+        GD.Print("Succesfully opened directory");
+        if (dir != null)
+        {
+            dir.ListDirBegin();
+            string fileName = dir.GetNext();
+            while (fileName != "")
+            {
+                GD.Print("Loading:" + fileName);
+                if(fileName.EndsWith("png"))
+                {
+                    String fullPath = "res://Circles/" + fileName;
+                    Image loadImage = ImageLoad(fullPath);
+                    loadImage.Resize(loadImage.GetWidth(), loadImage.GetHeight());
+                    loadImage.Convert(Image.Format.Rgba8);
+                    circleImage.Add(loadImage);
+                    ImageCount++;
+                }
+                fileName = dir.GetNext();
+            }
+        }
+        else
+        {
+            GD.Print("An error occurred when trying to access the path.");
+        }
+        CircleTexture = new ImageTexture[ImageCount];
+        
+        for (int i = 0; i < ImageCount; i++)
+        {
+            CircleTexture[i] = ImageTexture.CreateFromImage(circleImage[i]);
+        } 
+        
+    }
 
 }
