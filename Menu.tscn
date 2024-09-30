@@ -4,13 +4,13 @@
 [ext_resource type="Script" path="res://Menu.cs" id="1_vkm37"]
 [ext_resource type="Texture2D" uid="uid://dov2paqge63py" path="res://1024px-A_black_image.jpg" id="2_tlpca"]
 [ext_resource type="Script" path="res://starting_text_layer.gd" id="4_b0qru"]
-[ext_resource type="Script" path="res://addons/richtext2/text_effects/anims/rte_fader.gd" id="5_6ay35"]
 [ext_resource type="Script" path="res://addons/richtext2/rich_text_animation.gd" id="5_d1tav"]
+[ext_resource type="Script" path="res://addons/richtext2/text_effects/anims/rte_prickle.gd" id="5_tn8av"]
 
-[sub_resource type="RichTextEffect" id="RichTextEffect_j13cf"]
-resource_name = "fader"
-script = ExtResource("5_6ay35")
-metadata/rt = 1772747813487
+[sub_resource type="RichTextEffect" id="RichTextEffect_vsrfq"]
+resource_name = "prickle"
+script = ExtResource("5_tn8av")
+metadata/rt = 1772026393198
 
 [node name="Menu" type="CanvasLayer"]
 script = ExtResource("1_vkm37")
@@ -99,8 +99,9 @@ theme_override_font_sizes/bold_font_size = 42
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
-custom_effects = [SubResource("RichTextEffect_j13cf")]
+custom_effects = [SubResource("RichTextEffect_vsrfq")]
 script = ExtResource("5_d1tav")
+animation = "prickle"
 progress = 1.0
 visible_character = 23
 _transforms = Array[Transform2D]([Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 71, 37), Transform2D(1, 0, 0, 1, 92, 37), Transform2D(1, 0, 0, 1, 113, 37), Transform2D(1, 0, 0, 1, 134, 37), Transform2D(1, 0, 0, 1, 155, 37), Transform2D(1, 0, 0, 1, 176, 37), Transform2D(1, 0, 0, 1, 197, 37), Transform2D(1, 0, 0, 1, 218, 37), Transform2D(1, 0, 0, 1, 239, 37), Transform2D(1, 0, 0, 1, 260, 37), Transform2D(1, 0, 0, 1, 281, 37), Transform2D(1, 0, 0, 1, 302, 37), Transform2D(1, 0, 0, 1, 323, 37), Transform2D(1, 0, 0, 1, 344, 37), Transform2D(1, 0, 0, 1, 365, 37), Transform2D(1, 0, 0, 1, 386, 37), Transform2D(1, 0, 0, 1, 407, 37), Transform2D(1, 0, 0, 1, 428, 37), Transform2D(1, 0, 0, 1, 449, 37), Transform2D(1, 0, 0, 1, 470, 37), Transform2D(1, 0, 0, 1, 491, 37), Transform2D(1, 0, 0, 1, 512, 37)])
@@ -108,12 +109,13 @@ _char_size = Array[Vector2]([Vector2(0, 0), Vector2(19, 31), Vector2(19, 31), Ve
 _alpha = Array[float]([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
 _alpha_goal = Array[float]([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
 _forced_finish_delay = -0.0327773
+animation = "prickle"
 default_wait_time = 1.0
 play_on_bbcode = true
-play_speed = 10.0
+play_speed = 8.0
 fade_out = false
-fade_in_speed = 25.0
-fade_out_speed = 2.0
+fade_in_speed = 5.0
+fade_out_speed = 0.2
 ctc_offset = Vector2(1, -0.5)
 ctc_on_finished = false
 ctc_on_wait = false
@@ -168,5 +170,6 @@ override_clipContents = false
 override_fitContent = true
 fit_width = false
 fit_width_padding = 10
+metadata/rand = Array[int]([806473721, 3111270159, 1113692759, 1668850413, 154058336, 4222339942, 2318567393, 2883157425, 638024498, 1992904766, 574581041, 3734651438, 4227071475, 2325874369, 44540653, 2978002413, 1187107487, 2847724029, 835206862, 4210724544, 3501408874, 1957687457, 3919269500])
 
 [connection signal="StartTitleSequence" from="." to="StartingTextLayer" method="_on_menu_start_title_sequence"]
