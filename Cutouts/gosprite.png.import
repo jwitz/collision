@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ddserif2p1hw3"
-path="res://.godot/imported/gosprite.png-14add9a4b063d86a9fe7aa2862798628.ctex"
+path="res://.godot/imported/gosprite.png-7c4968bb086b985a5fed9f011b22e2e1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://gosprite.png"
-dest_files=["res://.godot/imported/gosprite.png-14add9a4b063d86a9fe7aa2862798628.ctex"]
+source_file="res://Cutouts/gosprite.png"
+dest_files=["res://.godot/imported/gosprite.png-7c4968bb086b985a5fed9f011b22e2e1.ctex"]
 
 [params]
 

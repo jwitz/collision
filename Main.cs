@@ -6,7 +6,8 @@ using System.Numerics;
 
 public partial class Main : Node2D
 {
-    private ImageTexture[] CircleTexture  { get; set; }
+    private ImageTexture[] CircleTexture { get; set; }
+    private ImageTexture GoTexture { get; set; }
     public Image FogImage { get; set; }
     public Sprite2D Fog { get; set; }
     public ImageTexture FogTexture { get; set; } = new ImageTexture();
@@ -55,7 +56,7 @@ public partial class Main : Node2D
 
     private void OnPlayerMove(Godot.Vector2 playerPosition)
     {
-        // Load details of dissolve circle
+        // Load details of dissolve circle. Randomize exact image to create jittering effect
         var circleImage = CircleTexture[GD.Randi() % ImageCount].GetImage();
         var circleRect = circleImage.GetUsedRect();
         var dissolvePosition = playerPosition - (circleRect.Size / 2);
@@ -129,21 +130,23 @@ public partial class Main : Node2D
 
         // Fill map out with darkness. 
         Fog = GetNode<Sprite2D>("FogContainer/Fog");
-        FogImage = Image.Create(2700, 2700, false, Image.Format.Rgba8);
+        FogImage = Godot.Image.CreateEmpty(2700, 2700, false, Image.Format.Rgba8);
         FogImage.Fill(Colors.Black);
         FogTexture.SetImage(FogImage);
         Fog.Texture = FogTexture;
         EmitSignal(SignalName.ShowGameOver, CleanCount, TotalTileCount, true);
     }
 
-    public void StartGame()
-    {
+    public void OnMenuStageGame() {
 
+        GetNode<AudioStreamPlayer>("Music").Play();
+
+        //Create starting sequence scene, but don't let player move until instructions are over.
         GetNode<Player>("Player").Start(GetNode<Marker2D>("StartPos").Position);
 
         // Fill map out with darkness. 
         Fog = GetNode<Sprite2D>("FogContainer/Fog");
-        FogImage = Image.Create(2700, 2700, false, Image.Format.Rgba8);
+        FogImage = Godot.Image.CreateEmpty(2700, 2700, false, Image.Format.Rgba8);
         FogImage.Fill(Colors.Black);
         FogTexture.SetImage(FogImage);
         Fog.Texture = FogTexture;
@@ -162,12 +165,30 @@ public partial class Main : Node2D
         //Get total tiles to clean
         Godot.Collections.Array<Godot.Vector2I> TotalTiles = GetNode<LevelMap>("LevelMap").GetUsedCells(0);
         TotalTileCount = TotalTiles.Count;
+    }
+
+    public void StartGame()
+    {
+        //TODO: Add GO message here
+        BlendGoImage();
+
 
         //Start battery timer and allow player to move
         GetNode<Timer>("Player/FlickerTimer").Start();
         GetNode<Player>("Player").CanMove = true;
 
-        GetNode<AudioStreamPlayer>("Music").Play();
+    }
+
+    public void BlendGoImage()
+    {
+        var goImage = GoTexture.GetImage();
+        goImage.Rotate90(ClockDirection.Clockwise);
+        var goRect = goImage.GetUsedRect();
+        var dissolvePosition = GetNode<Marker2D>("GoPos").Position;
+
+        // Create new texture with white detection circle blended in
+        FogImage.BlendRect(goImage, (Rect2I)goRect, (Vector2I)dissolvePosition);
+        UpdateFogImageTexture();
 
     }
 
@@ -183,14 +204,12 @@ public partial class Main : Node2D
     {
         List<Image> circleImage = new List<Image>();
         var dir = DirAccess.Open("res://Circles");
-        GD.Print("Succesfully opened directory");
         if (dir != null)
         {
             dir.ListDirBegin();
             string fileName = dir.GetNext();
             while (fileName != "")
             {
-                GD.Print("Loading:" + fileName);
                 if(fileName.EndsWith("png"))
                 {
                     String fullPath = "res://Circles/" + fileName;
@@ -213,6 +232,14 @@ public partial class Main : Node2D
         {
             CircleTexture[i] = ImageTexture.CreateFromImage(circleImage[i]);
         } 
+
+        // Load Go sprite
+        Image goImage = new Image();
+        Image goLoadImage = ImageLoad("res://Cutouts/gosprite.png");
+        goLoadImage.Resize(goLoadImage.GetWidth(), goLoadImage.GetHeight());
+        goLoadImage.Convert(Image.Format.Rgba8);
+        goImage = goLoadImage;
+        GoTexture = ImageTexture.CreateFromImage(goImage);
         
     }
 
