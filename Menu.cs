@@ -8,7 +8,12 @@ public partial class Menu : CanvasLayer
 	[Signal]
     public delegate void StartGameEventHandler();
 	[Signal]
+    public delegate void StartTitleSequenceEventHandler();
+	[Signal]
 	public delegate void ResetGameEventHandler();
+	[Signal]
+	public delegate void StageGameEventHandler();
+
 
 	public void ShowMessage(string text)
 	{
@@ -59,8 +64,13 @@ public partial class Menu : CanvasLayer
 			GetNode<Sprite2D>("Backdrop").Hide();
 			GetNode<Label>("Title").Hide();
 			GetNode<Label>("Instructions").Hide();
-    		EmitSignal(SignalName.StartGame);
+			EmitSignal(SignalName.StageGame);
+			EmitSignal(SignalName.StartTitleSequence);
 			IsTitleScreen = false;
 		}
+	}
+
+	public void OnStartingSequenceComplete() {
+		EmitSignal(SignalName.StartGame);
 	}
 }

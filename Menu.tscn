@@ -1,8 +1,16 @@
-[gd_scene load_steps=4 format=3 uid="uid://50dt2udvpxam"]
+[gd_scene load_steps=8 format=3 uid="uid://50dt2udvpxam"]
 
 [ext_resource type="FontFile" uid="uid://bpnu6m02u3p5v" path="res://novem___.ttf" id="1_gdfv8"]
 [ext_resource type="Script" path="res://Menu.cs" id="1_vkm37"]
 [ext_resource type="Texture2D" uid="uid://dov2paqge63py" path="res://1024px-A_black_image.jpg" id="2_tlpca"]
+[ext_resource type="Script" path="res://starting_text_layer.gd" id="4_b0qru"]
+[ext_resource type="Script" path="res://addons/richtext2/rich_text_animation.gd" id="5_d1tav"]
+[ext_resource type="Script" path="res://addons/richtext2/text_effects/anims/rte_prickle.gd" id="5_tn8av"]
+
+[sub_resource type="RichTextEffect" id="RichTextEffect_i8exa"]
+resource_name = "prickle"
+script = ExtResource("5_tn8av")
+metadata/rt = 6750346478816
 
 [node name="Menu" type="CanvasLayer"]
 script = ExtResource("1_vkm37")
@@ -68,3 +76,102 @@ clip_text = true
 [node name="MessageTimer" type="Timer" parent="."]
 wait_time = 2.0
 one_shot = true
+
+[node name="StartingTextLayer" type="CanvasLayer" parent="."]
+script = ExtResource("4_b0qru")
+
+[node name="Node2D" type="Node2D" parent="StartingTextLayer"]
+position = Vector2(512, 184)
+
+[node name="StartingText" type="RichTextLabel" parent="StartingTextLayer/Node2D"]
+visible = false
+clip_contents = false
+custom_minimum_size = Vector2(0, 43)
+offset_left = -214.0
+offset_top = -27.0
+offset_right = 369.0
+offset_bottom = 42.0
+theme_override_colors/font_outline_color = Color(0.2, 0.2, 0.2, 1)
+theme_override_font_sizes/bold_italics_font_size = 42
+theme_override_font_sizes/italics_font_size = 42
+theme_override_font_sizes/mono_font_size = 42
+theme_override_font_sizes/normal_font_size = 42
+theme_override_font_sizes/bold_font_size = 42
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+custom_effects = [SubResource("RichTextEffect_i8exa")]
+script = ExtResource("5_d1tav")
+animation = "prickle"
+progress = 1.0
+visible_character = 23
+_transforms = Array[Transform2D]([Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0), Transform2D(1, 0, 0, 1, 0, 0)])
+_char_size = Array[Vector2]([Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0), Vector2(0, 0)])
+_alpha = Array[float]([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+_alpha_goal = Array[float]([1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0, 1.0])
+_forced_finish_delay = -0.0327773
+animation = "prickle"
+default_wait_time = 1.0
+play_on_bbcode = true
+play_speed = 15.0
+fade_out = false
+fade_in_speed = 5.0
+fade_out_speed = 0.2
+ctc_offset = Vector2(1, -0.5)
+ctc_on_finished = false
+ctc_on_wait = false
+shortcut_expression = true
+shortcut_bookmark = true
+signal_quotes = true
+signal_stars = true
+bbcode = "Test string from editor"
+effects = 2
+alignment = 1
+color = Color(1, 1, 1, 1)
+emoji_scale = 1.0
+font = "novem___"
+font_auto_setup = true
+font_size = 42
+font_bold_weight = 1.5
+font_italics_slant = 0.25
+font_italics_weight = -0.25
+shadow_enabled = false
+shadow_offset = 0.08
+shadow_alpha = 0.25
+shadow_outline_size = 0.1
+outline_size = 0
+outline_mode = 1
+outline_adjust = 0.8
+outline_hue_adjust = 0.0125
+nicer_quotes_enabled = true
+nicer_quotes_format = "“%s”"
+markdown_enabled = true
+markdown_format_bold = "[b]%s[]"
+markdown_format_italics = "[i]%s[]"
+markdown_format_bold_italics = "[bi]%s[]"
+markdown_format_highlight = "[green;sin]%s[]"
+markdown_format_bold2 = "[b]*%s*[]"
+markdown_format_italics2 = "[i;gray]*%s*[]"
+markdown_format_bold_italics2 = "%s"
+context_enabled = true
+context_path = NodePath("/root/State")
+context_rich_objects = true
+context_rich_ints = true
+context_rich_array = true
+autostyle_numbers = true
+autostyle_numbers_tag = "[salmon]%s[]"
+autostyle_numbers_pad_decimals = true
+autostyle_numbers_decimals = 2
+autostyle_emojis = true
+effect_weight = 0.0
+meta_auto_https = true
+meta_cursor = 2
+override_bbcodeEnabled = true
+override_clipContents = false
+override_fitContent = true
+fit_width = false
+fit_width_padding = 10
+metadata/rand = Array[int]([806473721, 3111270159, 1113692759, 1668850413, 154058336, 4222339942, 2318567393, 2883157425, 638024498, 1992904766, 574581041, 3734651438, 4227071475, 2325874369, 44540653, 2978002413, 1187107487, 2847724029, 835206862, 4210724544, 3501408874, 1957687457, 3919269500])
+
+[connection signal="StartTitleSequence" from="." to="StartingTextLayer" method="_on_menu_start_title_sequence"]
+[connection signal="starting_sequence_completed" from="StartingTextLayer" to="." method="OnStartingSequenceComplete"]
