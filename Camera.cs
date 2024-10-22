@@ -8,6 +8,7 @@ public partial class Camera : Camera2D
 	private bool IsZoomedIn { get; set; } = true;
 	public double ZoomTimer {get; set; } = 0.0; //Measures progress of zoom interpolation
 	public double ZoomOffset {get; set; } = 0.0; //Measures soft zoom effect/ offset of zoom progress
+	public bool CanZoom {get; set;} = false;
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -17,11 +18,11 @@ public partial class Camera : Camera2D
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		if (Input.IsActionPressed("zoom") && IsZooming == false)
+		if (Input.IsActionPressed("zoom") && IsZooming == false && CanZoom == true)
 		{
 			IsZooming = true;
 		}
-		if (IsZooming == true)
+		if (IsZooming == true && CanZoom == true)
 		{
 			ZoomCamera();
 		}

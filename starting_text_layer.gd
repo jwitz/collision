@@ -1,12 +1,13 @@
 extends CanvasLayer
 var waitTime = 1
 signal starting_sequence_completed
+signal battery_statement_completed
 
 var messages := [
-	"Something happened to your power source.",
-	"You have no connection to the mapping server.",
+	"ALERT: Power source hub has been compromised",
+	"Connection to mapping server has been severed",
 	"Last charge protocol is in effect.",
-	"Do one last clean to make us proud."
+	"TODO: One last clean to make us proud."
 ]
 
 # Called when the node enters the scene tree for the first time.
@@ -20,6 +21,8 @@ func _process(delta: float) -> void:
 func _on_menu_start_title_sequence() -> void:
 	$Node2D/StartingText.visible = true
 	for n in range(0,messages.size()):
+		if n == 2:
+			battery_statement_completed.emit()		
 		$Node2D/StartingText.set_bbcode(messages[n])
 		await get_tree().create_timer(4.0).timeout
 		$Node2D/StartingText.fade_out = true
