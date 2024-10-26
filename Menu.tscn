@@ -9,15 +9,15 @@
 [ext_resource type="Script" path="res://game_over_layer.gd" id="7_gmh63"]
 [ext_resource type="Script" path="res://addons/richtext2/text_effects/anims/rte_fader.gd" id="8_idmll"]
 
-[sub_resource type="RichTextEffect" id="RichTextEffect_ijtr2"]
+[sub_resource type="RichTextEffect" id="RichTextEffect_yvl3p"]
 resource_name = "prickle"
 script = ExtResource("5_tn8av")
-metadata/rt = 4238948237249
+metadata/rt = 5032359556605
 
-[sub_resource type="RichTextEffect" id="RichTextEffect_d1etg"]
+[sub_resource type="RichTextEffect" id="RichTextEffect_3pjip"]
 resource_name = "fader"
 script = ExtResource("8_idmll")
-metadata/rt = 4239434775179
+metadata/rt = 5032846098562
 
 [node name="Menu" type="CanvasLayer"]
 script = ExtResource("1_vkm37")
@@ -106,7 +106,7 @@ theme_override_font_sizes/bold_font_size = 42
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
-custom_effects = [SubResource("RichTextEffect_ijtr2")]
+custom_effects = [SubResource("RichTextEffect_yvl3p")]
 script = ExtResource("5_d1tav")
 animation = "prickle"
 progress = 1.0
@@ -186,17 +186,19 @@ script = ExtResource("7_gmh63")
 
 [node name="GameOverText" type="RichTextLabel" parent="GameOverLayer/Node2D"]
 clip_contents = false
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = 339.0
+offset_top = 147.0
+offset_right = 832.0
+offset_bottom = 204.0
 theme_override_colors/font_outline_color = Color(0.2, 0.2, 0.2, 1)
-theme_override_font_sizes/bold_italics_font_size = 16
-theme_override_font_sizes/italics_font_size = 16
-theme_override_font_sizes/mono_font_size = 16
-theme_override_font_sizes/normal_font_size = 16
-theme_override_font_sizes/bold_font_size = 16
+theme_override_font_sizes/bold_italics_font_size = 42
+theme_override_font_sizes/italics_font_size = 42
+theme_override_font_sizes/mono_font_size = 42
+theme_override_font_sizes/normal_font_size = 42
+theme_override_font_sizes/bold_font_size = 42
 bbcode_enabled = true
 fit_content = true
-custom_effects = [SubResource("RichTextEffect_d1etg")]
+custom_effects = [SubResource("RichTextEffect_3pjip")]
 script = ExtResource("5_d1tav")
 _forced_finish_delay = -0.0390041
 default_wait_time = 1.0
@@ -217,9 +219,9 @@ effects = 2
 alignment = 1
 color = Color(1, 1, 1, 1)
 emoji_scale = 1.0
-font = ""
+font = "novem___"
 font_auto_setup = true
-font_size = 16
+font_size = 42
 font_bold_weight = 1.5
 font_italics_slant = 0.25
 font_italics_weight = -0.25
