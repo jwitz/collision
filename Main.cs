@@ -18,6 +18,8 @@ public partial class Main : Node2D
     public int ImageCount { get; set; } = 0;
     public int TotalTileCount { get; set; }
     public TileMap Area { get; set; }
+    public bool IsLoadBattery { get; set; } = false;
+    public int StartFlickerTime {get; set; } = 0;
 
     [Signal]
     public delegate void ShowGameOverEventHandler();
@@ -96,7 +98,31 @@ public partial class Main : Node2D
 
     private void OnFlickerTimerTimeout()
     {
-        if (GetNode<Player>("Player").IsConsumingBattery == false)
+        // Logic for showing battery flickering at beginning of the game
+        if (IsLoadBattery == true && StartFlickerTime < 5)
+        {
+            if (IsLightOn == true)
+                {
+                    BatteryLines[0].Visible = true;
+                    BatteryLines[1].Visible = true;
+                    BatteryLines[2].Visible = true;
+                    BatteryLines[3].Visible = true;
+                    BatteryLines[4].Visible = true;
+                    IsLightOn = false;
+                    StartFlickerTime ++;
+                }
+                else 
+                {
+                    BatteryLines[0].Visible = false;
+                    BatteryLines[1].Visible = false;
+                    BatteryLines[2].Visible = false;
+                    BatteryLines[3].Visible = false;
+                    BatteryLines[4].Visible = false;
+                    IsLightOn = true;
+                }
+        }
+        // Core battery logic. Only flicker when player is moving
+        else if (GetNode<Player>("Player").IsConsumingBattery == false)
         {
             BatteryLines[BatteryCount].Visible = true;
         }
@@ -154,14 +180,6 @@ public partial class Main : Node2D
         // Load images we'll use to reveal the map
         LoadImages();
 
-        //Load batteries
-        BatteryLines[0] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine0"); 
-        BatteryLines[1] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine1"); 
-        BatteryLines[2] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine2"); 
-        BatteryLines[3] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine3"); 
-        BatteryLines[4] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine4");
-        GetNode<CanvasLayer>("CanvasLayer").Show(); 
-
         //Get total tiles to clean
         Godot.Collections.Array<Godot.Vector2I> TotalTiles = GetNode<LevelMap>("LevelMap").GetUsedCells(0);
         TotalTileCount = TotalTiles.Count;
@@ -169,14 +187,10 @@ public partial class Main : Node2D
 
     public void StartGame()
     {
-        //TODO: Add GO message here
+        IsLoadBattery = false;
         BlendGoImage();
-
-
-        //Start battery timer and allow player to move
-        GetNode<Timer>("Player/FlickerTimer").Start();
         GetNode<Player>("Player").CanMove = true;
-
+        GetNode<Camera>("Player/Camera").CanZoom = true;
     }
 
     public void BlendGoImage()
@@ -189,6 +203,20 @@ public partial class Main : Node2D
         // Create new texture with white detection circle blended in
         FogImage.BlendRect(goImage, (Rect2I)goRect, (Vector2I)dissolvePosition);
         UpdateFogImageTexture();
+
+    }
+
+    private void OnStartingLayerBatteryStatementCompleted()
+    {
+        //Load batteries
+        BatteryLines[0] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine0"); 
+        BatteryLines[1] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine1"); 
+        BatteryLines[2] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine2"); 
+        BatteryLines[3] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine3"); 
+        BatteryLines[4] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine4");
+        GetNode<CanvasLayer>("CanvasLayer").Show(); 
+        IsLoadBattery = true;
+        GetNode<Timer>("Player/FlickerTimer").Start();
 
     }
 

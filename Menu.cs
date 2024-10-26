@@ -10,6 +10,8 @@ public partial class Menu : CanvasLayer
 	[Signal]
     public delegate void StartTitleSequenceEventHandler();
 	[Signal]
+    public delegate void GameOverTextSequenceEventHandler(float percentage);
+	[Signal]
 	public delegate void ResetGameEventHandler();
 	[Signal]
 	public delegate void StageGameEventHandler();
@@ -31,25 +33,8 @@ public partial class Menu : CanvasLayer
 
 		GetNode<Sprite2D>("Backdrop").Show();
 
-		await ToSignal(GetTree().CreateTimer(2.0), SceneTreeTimer.SignalName.Timeout);
+		EmitSignal(SignalName.GameOverTextSequence, percentage);
 
-		ShowMessage("As the last of your power drains,\n you remember the contours of a home. \n It was not your home, but it was your duty to clean it. \n ");
-		
-	    await ToSignal(GetTree().CreateTimer(2.0), SceneTreeTimer.SignalName.Timeout);
-
-		ShowMessage("You cleaned " + percentage + "% of the home. \n Your owner is sure to be happy. \n Be proud of your work.");
-		
-	    await ToSignal(GetTree().CreateTimer(2.0), SceneTreeTimer.SignalName.Timeout);
-
-		GetNode<Label>("Message").Hide();
-
-		await ToSignal(GetTree().CreateTimer(2.0), SceneTreeTimer.SignalName.Timeout);
-
-	    GetNode<Label>("Title").Show();
-		GetNode<Label>("Instructions").Show();
-		IsGameOver = false;
-		IsTitleScreen = true;
-		EmitSignal(SignalName.ResetGame);
 	}
 
 	public override void _Ready()
@@ -72,5 +57,13 @@ public partial class Menu : CanvasLayer
 
 	public void OnStartingSequenceComplete() {
 		EmitSignal(SignalName.StartGame);
+	}
+
+	public void OnGameOverLayerEndingSequenceCompleted() {
+		GetNode<Label>("Title").Show();
+		GetNode<Label>("Instructions").Show();
+		IsGameOver = false;
+		IsTitleScreen = true;
+		EmitSignal(SignalName.ResetGame);
 	}
 }
