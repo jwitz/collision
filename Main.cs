@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
+using System.Threading.Tasks;
 
 public partial class Main : Node2D
 {
@@ -20,6 +21,10 @@ public partial class Main : Node2D
     public TileMap Area { get; set; }
     public bool IsLoadBattery { get; set; } = false;
     public int StartFlickerTime {get; set; } = 0;
+    public int ShaderLevel {get; set; } = 0;
+    public bool StartShaders { get; set; } = false;
+    private bool IsRestart { get; set; } = false;
+    private bool IsMusicSpeedingUp { get; set; } = false;
 
     [Signal]
     public delegate void ShowGameOverEventHandler();
@@ -30,6 +35,30 @@ public partial class Main : Node2D
         GetNode<CanvasLayer>("CanvasLayer").Hide();
         return;
     }
+    public override void _Process(double delta)
+	{
+        // Game over shader handler
+        if(StartShaders == true && ShaderLevel <= 500) 
+        {
+            GetNode<AudioStreamPlayer>("Music").PitchScale -= (float)0.0010;
+            ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel/PowerDownPixel").Material).SetShaderParameter("size_x", (float)Math.Sin(ShaderLevel)*.003);
+            ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel/PowerDownPixel").Material).SetShaderParameter("size_y", (float)Math.Sin(ShaderLevel)*.003);
+            ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferMirage/PowerDownCanvas/PowerDownMirage").Material).SetShaderParameter("frequency", ShaderLevel*.03);
+            ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferMirage/PowerDownCanvas/PowerDownMirage").Material).SetShaderParameter("depth", ShaderLevel*.00016);
+            if (ShaderLevel == 300) {
+                GetNode<Player>("Player").IsGameOver = true;
+            }
+            ShaderLevel++;
+        }
+
+        // Game restart music handler
+        // Game over shader handler
+        if(IsMusicSpeedingUp == true && ShaderLevel <= 500) 
+        {
+            GetNode<AudioStreamPlayer>("Music").PitchScale += (float)0.0010;
+            ShaderLevel++;
+        }
+	}
 
     private void OnPlayerClean(int column, int row)
     {
@@ -142,33 +171,53 @@ public partial class Main : Node2D
 
     }
 
-    public void GameOver()
+    public async void GameOver()
     {
-        // Refill battery
-        for (int i = 0; i < BatteryLines.Length; i++)
-        {
-            BatteryLines[i].Visible = true;
-        }
 
         GetNode<Player>("Player").CanMove = false;
 
-        GetNode<AudioStreamPlayer>("Music").Stop();
+        GetNode<CanvasLayer>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel").Visible = true;
+        GetNode<CanvasLayer>("Player/Camera/BackBufferMirage/PowerDownCanvas").Visible = true;
+        StartShaders = true;
 
-        // Fill map out with darkness. 
+        await Task.Delay(TimeSpan.FromMilliseconds(5000)); 
+        // Fill map out withprint darkness. 
         Fog = GetNode<Sprite2D>("FogContainer/Fog");
         FogImage = Godot.Image.CreateEmpty(2700, 2700, false, Image.Format.Rgba8);
         FogImage.Fill(Colors.Black);
         FogTexture.SetImage(FogImage);
         Fog.Texture = FogTexture;
         EmitSignal(SignalName.ShowGameOver, CleanCount, TotalTileCount, true);
+        GetNode<CanvasLayer>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel").Visible = false;
+        GetNode<CanvasLayer>("Player/Camera/BackBufferMirage/PowerDownCanvas").Visible = false;
+        StartShaders = false;
+        GetNode<Player>("Player").IsGameOver = false;
+        ShaderLevel = 0;
+        GetNode<CanvasLayer>("CanvasLayer").Hide(); 
+        // Refill battery
+        for (int i = 0; i < BatteryLines.Length; i++)
+        {
+            BatteryLines[i].Visible = true;
+        }
+        IsRestart = true;
+
     }
 
     public void OnMenuStageGame() {
 
-        GetNode<AudioStreamPlayer>("Music").Play();
+        if (IsRestart == false) {
+            GetNode<AudioStreamPlayer>("Music").Play();
+        }
+        else {
+            IsMusicSpeedingUp = true;
+        }
 
         //Create starting sequence scene, but don't let player move until instructions are over.
         GetNode<Player>("Player").Start(GetNode<Marker2D>("StartPos").Position);
+
+        //Hide shader canvases
+        GetNode<CanvasLayer>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel").Visible = false;
+        GetNode<CanvasLayer>("Player/Camera/BackBufferMirage/PowerDownCanvas").Visible = false;
 
         // Fill map out with darkness. 
         Fog = GetNode<Sprite2D>("FogContainer/Fog");
@@ -178,7 +227,9 @@ public partial class Main : Node2D
         Fog.Texture = FogTexture;
 
         // Load images we'll use to reveal the map
-        LoadImages();
+        if (!IsRestart) {
+            LoadImages();
+        }
 
         //Get total tiles to clean
         Godot.Collections.Array<Godot.Vector2I> TotalTiles = GetNode<LevelMap>("LevelMap").GetUsedCells(0);
@@ -188,6 +239,7 @@ public partial class Main : Node2D
     public void StartGame()
     {
         IsLoadBattery = false;
+        ShaderLevel = 0;
         BlendGoImage();
         GetNode<Player>("Player").CanMove = true;
         GetNode<Camera>("Player/Camera").CanZoom = true;
