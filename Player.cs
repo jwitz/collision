@@ -21,6 +21,8 @@ public partial class Player : CharacterBody2D
 	public float DoubleTapTime { get; set; } = DoubleDelay;
 	public bool IsConsumingBattery { get; set; } = false;
 	public bool CanMove { get; set; } = false;
+	public bool IsGameOver { get; set; } = false;
+	public float GameOverSensitivity { get; set; } = 0.2f;
 
 
 	public InputEventAction lastInput = new InputEventAction();
@@ -57,6 +59,16 @@ public partial class Player : CharacterBody2D
 
     public override void _PhysicsProcess(double delta)
 	{
+		if (IsGameOver == true) {
+			if (lastInput.Action == "rotate_left") {
+				Rotate(Mathf.DegToRad(-1) * GameOverSensitivity);
+			}
+			else {
+				Rotate(Mathf.DegToRad(1) * GameOverSensitivity);
+			}
+			GameOverSensitivity = GameOverSensitivity<= 6f ? GameOverSensitivity += .02f : GameOverSensitivity;
+			MoveAndSlide();
+		}
 		if (CanMove == false)
 		{
 			return;
