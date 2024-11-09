@@ -41,14 +41,17 @@ public partial class Main : Node2D
         if(StartShaders == true && ShaderLevel <= 500) 
         {
             GetNode<AudioStreamPlayer>("Music").PitchScale -= (float)0.0010;
-            ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel/PowerDownPixel").Material).SetShaderParameter("size_x", (float)Math.Sin(ShaderLevel)*.003);
-            ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel/PowerDownPixel").Material).SetShaderParameter("size_y", (float)Math.Sin(ShaderLevel)*.003);
+            ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel/PowerDownPixel").Material).SetShaderParameter("size_x", (float)Math.Sin(ShaderLevel)*.006);
+            ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel/PowerDownPixel").Material).SetShaderParameter("size_y", (float)Math.Sin(ShaderLevel)*.006);
             ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferMirage/PowerDownCanvas/PowerDownMirage").Material).SetShaderParameter("frequency", ShaderLevel*.03);
             ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferMirage/PowerDownCanvas/PowerDownMirage").Material).SetShaderParameter("depth", ShaderLevel*.00016);
             if (ShaderLevel == 300) {
                 GetNode<Player>("Player").IsGameOver = true;
             }
             ShaderLevel++;
+            if (ShaderLevel == 400) {
+                GetNode<CanvasLayer>("Fade").Call("fade_out", 2);
+            }
         }
 
         // Game restart music handler
@@ -178,7 +181,13 @@ public partial class Main : Node2D
 
         GetNode<CanvasLayer>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel").Visible = true;
         GetNode<CanvasLayer>("Player/Camera/BackBufferMirage/PowerDownCanvas").Visible = true;
+        GetNode<CanvasLayer>("Fade").Visible = true;
         StartShaders = true;
+        // Show red battery lines
+        for (int i = 0; i < BatteryLines.Length; i++)
+        {
+            BatteryLines[i].Visible = true;
+        }
 
         await Task.Delay(TimeSpan.FromMilliseconds(5000)); 
         // Fill map out withprint darkness. 
@@ -193,12 +202,14 @@ public partial class Main : Node2D
         StartShaders = false;
         GetNode<Player>("Player").IsGameOver = false;
         ShaderLevel = 0;
-        GetNode<CanvasLayer>("CanvasLayer").Hide(); 
         // Refill battery
         for (int i = 0; i < BatteryLines.Length; i++)
         {
             BatteryLines[i].Visible = true;
         }
+        GetNode<CanvasLayer>("CanvasLayer").Hide(); 
+        GetNode<CanvasLayer>("Fade").Visible = false;
+        GetNode<CanvasLayer>("Fade").Call("fade_in", 0.1);
         IsRestart = true;
 
     }
@@ -239,6 +250,7 @@ public partial class Main : Node2D
     public void StartGame()
     {
         IsLoadBattery = false;
+        IsMusicSpeedingUp = false;
         ShaderLevel = 0;
         BlendGoImage();
         GetNode<Player>("Player").CanMove = true;
