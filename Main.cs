@@ -45,12 +45,12 @@ public partial class Main : Node2D
             ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel/PowerDownPixel").Material).SetShaderParameter("size_y", (float)Math.Sin(ShaderLevel)*.006);
             ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferMirage/PowerDownCanvas/PowerDownMirage").Material).SetShaderParameter("frequency", ShaderLevel*.03);
             ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferMirage/PowerDownCanvas/PowerDownMirage").Material).SetShaderParameter("depth", ShaderLevel*.00016);
-            if (ShaderLevel == 300) {
+            if (ShaderLevel == 100) {
                 GetNode<Player>("Player").IsGameOver = true;
             }
             ShaderLevel++;
             if (ShaderLevel == 400) {
-                GetNode<CanvasLayer>("Fade").Call("fade_out", 2);
+                //GetNode<CanvasLayer>("Fade").Call("fade_out", 2);
             }
         }
 
@@ -181,7 +181,7 @@ public partial class Main : Node2D
 
         GetNode<CanvasLayer>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel").Visible = true;
         GetNode<CanvasLayer>("Player/Camera/BackBufferMirage/PowerDownCanvas").Visible = true;
-        GetNode<CanvasLayer>("Fade").Visible = true;
+        // GetNode<CanvasLayer>("Fade").Visible = true;
         StartShaders = true;
         // Show red battery lines
         for (int i = 0; i < BatteryLines.Length; i++)
@@ -191,12 +191,7 @@ public partial class Main : Node2D
 
         await Task.Delay(TimeSpan.FromMilliseconds(5000)); 
         // Fill map out withprint darkness. 
-        Fog = GetNode<Sprite2D>("FogContainer/Fog");
-        FogImage = Godot.Image.CreateEmpty(2700, 2700, false, Image.Format.Rgba8);
-        FogImage.Fill(Colors.Black);
-        FogTexture.SetImage(FogImage);
-        Fog.Texture = FogTexture;
-        EmitSignal(SignalName.ShowGameOver, CleanCount, TotalTileCount, true);
+        GetNode<CanvasLayer>("Fade").Visible = false;
         GetNode<CanvasLayer>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel").Visible = false;
         GetNode<CanvasLayer>("Player/Camera/BackBufferMirage/PowerDownCanvas").Visible = false;
         StartShaders = false;
@@ -208,8 +203,8 @@ public partial class Main : Node2D
             BatteryLines[i].Visible = true;
         }
         GetNode<CanvasLayer>("CanvasLayer").Hide(); 
-        GetNode<CanvasLayer>("Fade").Visible = false;
-        GetNode<CanvasLayer>("Fade").Call("fade_in", 0.1);
+        GD.Print("Hiding battery.");
+        EmitSignal(SignalName.ShowGameOver, CleanCount, TotalTileCount, true);
         IsRestart = true;
 
     }

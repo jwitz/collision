@@ -4,10 +4,10 @@ signal starting_sequence_completed
 signal battery_statement_completed
 
 var messages := [
-	"ALERT: Power source hub has been compromised",
-	"Connection to mapping server has been severed",
+	"ALERT: Power source has been compromised.",
+	"Connection to mapping server has been severed.",
 	"Last charge protocol is in effect.",
-	"TODO: One last clean to make us proud."
+	"Clean like it's your last..."
 ]
 
 # Called when the node enters the scene tree for the first time.

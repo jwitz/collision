@@ -1,0 +1,47 @@
+[gd_scene load_steps=7 format=3 uid="uid://b164ic555svmr"]
+
+[ext_resource type="Texture2D" uid="uid://ch3q08wp8ffhj" path="res://Tree.png" id="1_c04xq"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_m76rt"]
+size = Vector2(10, 20)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_csi4c"]
+size = Vector2(44, 22)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_5idlh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_h7j0s"]
+size = Vector2(30, 6)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hi18a"]
+size = Vector2(14, 5)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-3.00003, 16)
+scale = Vector2(0.426758, 0.426758)
+texture = ExtResource("1_c04xq")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-3, 38)
+shape = SubResource("RectangleShape2D_m76rt")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-3, 14)
+shape = SubResource("RectangleShape2D_csi4c")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-3, 24)
+rotation = -0.796398
+shape = SubResource("RectangleShape2D_5idlh")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-3, 0)
+shape = SubResource("RectangleShape2D_h7j0s")
+
+[node name="CollisionShape2D5" type="CollisionShape2D" parent="StaticBody2D"]
+position = Vector2(-3, -5.5)
+shape = SubResource("RectangleShape2D_hi18a")

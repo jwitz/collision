@@ -32,7 +32,8 @@ public partial class Menu : CanvasLayer
 		float percentage = (cleanFloat / totalFloat) * 100;
 
 		GetNode<Sprite2D>("Backdrop").Show();
-
+		GD.Print("Setting backdrop");
+		GetNode<CanvasLayer>("GameOverLayer").MoveToFront();
 		EmitSignal(SignalName.GameOverTextSequence, percentage);
 
 	}
