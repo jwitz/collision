@@ -51,9 +51,10 @@ public partial class Player : CharacterBody2D
 		FlickerTimer = GetNode<Timer>("FlickerTimer");
 	}
 
-	public void Start(Godot.Vector2 startPos)
+	public void Start(Godot.Vector2 startPos, float startRotation)
 	{
 		Position = startPos;
+		Rotation = startRotation;
 	}
 
 
@@ -194,7 +195,7 @@ public partial class Player : CharacterBody2D
 		{
 			TileMap currentTileMap = (TileMap) body;
 			Vector2I tileCoords = currentTileMap.GetCoordsForBodyRid(bodyRid);
-			GD.Print("Cleaning tile...");
+			// GD.Print("Cleaning tile...");
 			EmitSignal(SignalName.Clean, tileCoords.X, tileCoords.Y);
 			LastTile = bodyRid;
 		}

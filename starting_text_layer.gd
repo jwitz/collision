@@ -7,7 +7,7 @@ var messages := [
 	"ALERT: Power source has been compromised.",
 	"Connection to mapping server has been severed.",
 	"Last charge protocol is in effect.",
-	"Clean like it's your last..."
+	"Clean as much as you can before you DIE."
 ]
 
 # Called when the node enters the scene tree for the first time.
