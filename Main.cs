@@ -25,12 +25,14 @@ public partial class Main : Node2D
     public bool StartShaders { get; set; } = false;
     private bool IsRestart { get; set; } = false;
     private bool IsMusicSpeedingUp { get; set; } = false;
+    private float StartingPlayerRotation { get; set; }
 
     [Signal]
     public delegate void ShowGameOverEventHandler();
 
     public override void _Ready()
     {
+        StartingPlayerRotation = GetNode<Player>("Player").Rotation;
         GD.Randomize();
         GetNode<CanvasLayer>("CanvasLayer").Hide();
         return;
@@ -41,11 +43,11 @@ public partial class Main : Node2D
         if(StartShaders == true && ShaderLevel <= 500) 
         {
             GetNode<AudioStreamPlayer>("Music").PitchScale -= (float)0.0010;
-            ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel/PowerDownPixel").Material).SetShaderParameter("size_x", (float)Math.Sin(ShaderLevel)*.006);
-            ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel/PowerDownPixel").Material).SetShaderParameter("size_y", (float)Math.Sin(ShaderLevel)*.006);
+            ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel/PowerDownPixel").Material).SetShaderParameter("size_x", (float)Math.Sin(ShaderLevel*.006)*.009);
+            ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel/PowerDownPixel").Material).SetShaderParameter("size_y", (float)Math.Sin(ShaderLevel*.006)*.009);
             ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferMirage/PowerDownCanvas/PowerDownMirage").Material).SetShaderParameter("frequency", ShaderLevel*.03);
             ((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferMirage/PowerDownCanvas/PowerDownMirage").Material).SetShaderParameter("depth", ShaderLevel*.00016);
-            if (ShaderLevel == 300) {
+            if (ShaderLevel == 100) {
                 GetNode<Player>("Player").IsGameOver = true;
             }
             ShaderLevel++;
@@ -67,11 +69,12 @@ public partial class Main : Node2D
     {
         if (GetNode<LevelMap>("LevelMap").GetTileStatus(column, row) == false)
         {
-            GD.Print("Cleaning tile...");
+            // Uncomment for tile debug
+            // GD.Print("Cleaning tile...");
             GetNode<LevelMap>("LevelMap").CleanTile(column, row);
             CleanCount++;
-            GD.Print("Player Cleaned!");
-            GD.Print("Tiles cleaned:" + CleanCount + "/" + TotalTileCount);
+            // GD.Print("Player Cleaned!");
+            // GD.Print("Tiles cleaned:" + CleanCount + "/" + TotalTileCount);
         }
     }
 
@@ -122,8 +125,10 @@ public partial class Main : Node2D
         }
         else 
         {
+            GetNode<Sprite2D>("CanvasLayer/Hud/NoBatteryLine").Show(); 
+            GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine0").Hide(); 
+            BatteryLines[0] = GetNode<Sprite2D>("CanvasLayer/Hud/NoBatteryLine"); 
             GameOver();
-            BatteryCount = 4;
             GetNode<Timer>("Player/BatteryTimer").Stop();
         }
     }
@@ -181,22 +186,9 @@ public partial class Main : Node2D
 
         GetNode<CanvasLayer>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel").Visible = true;
         GetNode<CanvasLayer>("Player/Camera/BackBufferMirage/PowerDownCanvas").Visible = true;
-        GetNode<CanvasLayer>("Fade").Visible = true;
         StartShaders = true;
-        // Show red battery lines
-        for (int i = 0; i < BatteryLines.Length; i++)
-        {
-            BatteryLines[i].Visible = true;
-        }
-
-        await Task.Delay(TimeSpan.FromMilliseconds(5000)); 
+        await Task.Delay(TimeSpan.FromMilliseconds(4500)); 
         // Fill map out withprint darkness. 
-        Fog = GetNode<Sprite2D>("FogContainer/Fog");
-        FogImage = Godot.Image.CreateEmpty(2700, 2700, false, Image.Format.Rgba8);
-        FogImage.Fill(Colors.Black);
-        FogTexture.SetImage(FogImage);
-        Fog.Texture = FogTexture;
-        EmitSignal(SignalName.ShowGameOver, CleanCount, TotalTileCount, true);
         GetNode<CanvasLayer>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel").Visible = false;
         GetNode<CanvasLayer>("Player/Camera/BackBufferMirage/PowerDownCanvas").Visible = false;
         StartShaders = false;
@@ -207,9 +199,22 @@ public partial class Main : Node2D
         {
             BatteryLines[i].Visible = true;
         }
+        BatteryCount = 4;
         GetNode<CanvasLayer>("CanvasLayer").Hide(); 
-        GetNode<CanvasLayer>("Fade").Visible = false;
-        GetNode<CanvasLayer>("Fade").Call("fade_in", 0.1);
+        GetNode<Player>("Player").GameOverSensitivity = 0.2f;
+        GetNode<CanvasLayer>("Fade").Call("fade_in", 1);
+        GetNode<CanvasLayer>("Fade").Hide();
+        await Task.Delay(TimeSpan.FromMilliseconds(500)); 
+        GetNode<Sprite2D>("CanvasLayer/Hud/NoBatteryLine").Hide(); 
+        GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine0").Show(); 
+        StartFlickerTime = 0;
+        GetNode<Timer>("Player/FlickerTimer").Stop();
+        GetNode<Player>("Player").IsConsumingBattery = false;
+        if (GetNode<Camera>("Player/Camera").IsZoomedIn == false) {
+            GetNode<Camera>("Player/Camera").ZoomCamera();
+        }
+        GetNode<Camera>("Player/Camera").CanZoom = false;
+        EmitSignal(SignalName.ShowGameOver, CleanCount, TotalTileCount, true);
         IsRestart = true;
 
     }
@@ -224,7 +229,7 @@ public partial class Main : Node2D
         }
 
         //Create starting sequence scene, but don't let player move until instructions are over.
-        GetNode<Player>("Player").Start(GetNode<Marker2D>("StartPos").Position);
+        GetNode<Player>("Player").Start(GetNode<Marker2D>("StartPos").Position, StartingPlayerRotation);
 
         //Hide shader canvases
         GetNode<CanvasLayer>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel").Visible = false;
@@ -236,6 +241,7 @@ public partial class Main : Node2D
         FogImage.Fill(Colors.Black);
         FogTexture.SetImage(FogImage);
         Fog.Texture = FogTexture;
+        GetNode<CanvasLayer>("Fade").Visible = true;
 
         // Load images we'll use to reveal the map
         if (!IsRestart) {
@@ -244,7 +250,9 @@ public partial class Main : Node2D
 
         //Get total tiles to clean
         Godot.Collections.Array<Godot.Vector2I> TotalTiles = GetNode<LevelMap>("LevelMap").GetUsedCells(0);
-        TotalTileCount = TotalTiles.Count;
+
+        // Manual number due to some tiles not being reachable. 
+        TotalTileCount = 582;
     }
 
     public void StartGame()
@@ -272,12 +280,17 @@ public partial class Main : Node2D
 
     private void OnStartingLayerBatteryStatementCompleted()
     {
-        //Load batteries
+        //Load batteries. Ensure they start off hidden so that they always appear at same time in resets.
         BatteryLines[0] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine0"); 
         BatteryLines[1] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine1"); 
         BatteryLines[2] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine2"); 
         BatteryLines[3] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine3"); 
         BatteryLines[4] = GetNode<Sprite2D>("CanvasLayer/Hud/BatteryLine4");
+        BatteryLines[0].Visible = false;
+        BatteryLines[1].Visible = false;
+        BatteryLines[2].Visible = false;
+        BatteryLines[3].Visible = false;
+        BatteryLines[4].Visible = false;
         GetNode<CanvasLayer>("CanvasLayer").Show(); 
         IsLoadBattery = true;
         GetNode<Timer>("Player/FlickerTimer").Start();
@@ -287,7 +300,7 @@ public partial class Main : Node2D
     private void OnMenuResetGame()
     {
         //Reset player position and score
-        GetNode<Player>("Player").Start(GetNode<Marker2D>("StartPos").Position);
+        GetNode<Player>("Player").Start(GetNode<Marker2D>("StartPos").Position, StartingPlayerRotation);
         CleanCount = 0;
         GetNode<LevelMap>("LevelMap").ResetTileMap();
     }

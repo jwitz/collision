@@ -1,23 +1,24 @@
-[gd_scene load_steps=11 format=3 uid="uid://50dt2udvpxam"]
+[gd_scene load_steps=12 format=3 uid="uid://50dt2udvpxam"]
 
 [ext_resource type="FontFile" uid="uid://bpnu6m02u3p5v" path="res://novem___.ttf" id="1_gdfv8"]
 [ext_resource type="Script" path="res://Menu.cs" id="1_vkm37"]
 [ext_resource type="Texture2D" uid="uid://dov2paqge63py" path="res://1024px-A_black_image.jpg" id="2_tlpca"]
+[ext_resource type="FontFile" uid="uid://cr4n1rpejcfkb" path="res://Seven Oh Ess 8x8 Monospaced.ttf" id="3_25mmf"]
 [ext_resource type="Script" path="res://starting_text_layer.gd" id="4_b0qru"]
 [ext_resource type="Script" path="res://addons/richtext2/rich_text_animation.gd" id="5_d1tav"]
 [ext_resource type="Script" path="res://addons/richtext2/text_effects/anims/rte_prickle.gd" id="5_tn8av"]
 [ext_resource type="Script" path="res://game_over_layer.gd" id="7_gmh63"]
 [ext_resource type="Script" path="res://addons/richtext2/text_effects/anims/rte_fader.gd" id="8_idmll"]
 
-[sub_resource type="RichTextEffect" id="RichTextEffect_yvl3p"]
+[sub_resource type="RichTextEffect" id="RichTextEffect_fu0rh"]
 resource_name = "prickle"
 script = ExtResource("5_tn8av")
-metadata/rt = 5032359556605
+metadata/rt = 6475552457356
 
-[sub_resource type="RichTextEffect" id="RichTextEffect_3pjip"]
+[sub_resource type="RichTextEffect" id="RichTextEffect_qjm3b"]
 resource_name = "fader"
 script = ExtResource("8_idmll")
-metadata/rt = 5032846098562
+metadata/rt = 6476039002573
 
 [node name="Menu" type="CanvasLayer"]
 script = ExtResource("1_vkm37")
@@ -33,38 +34,15 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -90.0
-offset_top = -20.0
-offset_right = 90.0
-offset_bottom = 20.0
+offset_left = -524.0
+offset_top = -60.0
+offset_right = 556.0
+offset_bottom = 60.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_fonts/font = ExtResource("1_gdfv8")
+theme_override_fonts/font = ExtResource("3_25mmf")
 theme_override_font_sizes/font_size = 120
-text = "Collision
-"
-horizontal_alignment = 1
-vertical_alignment = 1
-
-[node name="Instructions" type="Label" parent="."]
-anchors_preset = -1
-anchor_left = 0.5
-anchor_top = 0.951
-anchor_right = 0.5
-anchor_bottom = 0.951
-offset_left = -120.0
-offset_top = -198.248
-offset_right = 120.0
-offset_bottom = -16.248
-grow_horizontal = 2
-grow_vertical = 0
-theme_override_fonts/font = ExtResource("1_gdfv8")
-theme_override_font_sizes/font_size = 30
-text = "Move: ↑
-Rotate: ← / →
-180: ←← / →→
-Zoom: Spacebar
-Start: Press X"
+text = "Collision"
 horizontal_alignment = 1
 vertical_alignment = 1
 
@@ -80,6 +58,28 @@ vertical_alignment = 1
 autowrap_mode = 2
 clip_text = true
 
+[node name="Instructions" type="Label" parent="."]
+anchors_preset = -1
+anchor_left = 0.5
+anchor_top = 0.951
+anchor_right = 0.5
+anchor_bottom = 0.951
+offset_left = -127.5
+offset_top = -198.248
+offset_right = 127.5
+offset_bottom = -16.248
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("1_gdfv8")
+theme_override_font_sizes/font_size = 30
+text = "Move: ↑
+Rotate: ← / →
+Flip: ←← / →→
+Zoom: Spacebar
+Start: Press X"
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="MessageTimer" type="Timer" parent="."]
 wait_time = 2.0
 one_shot = true
@@ -88,7 +88,7 @@ one_shot = true
 script = ExtResource("4_b0qru")
 
 [node name="Node2D" type="Node2D" parent="StartingTextLayer"]
-position = Vector2(512, 184)
+position = Vector2(512, 168)
 
 [node name="StartingText" type="RichTextLabel" parent="StartingTextLayer/Node2D"]
 clip_contents = false
@@ -106,7 +106,7 @@ theme_override_font_sizes/bold_font_size = 42
 bbcode_enabled = true
 fit_content = true
 scroll_active = false
-custom_effects = [SubResource("RichTextEffect_yvl3p")]
+custom_effects = [SubResource("RichTextEffect_fu0rh")]
 script = ExtResource("5_d1tav")
 animation = "prickle"
 progress = 1.0
@@ -187,9 +187,9 @@ script = ExtResource("7_gmh63")
 [node name="GameOverText" type="RichTextLabel" parent="GameOverLayer/Node2D"]
 clip_contents = false
 offset_left = 339.0
-offset_top = 147.0
+offset_top = 131.0
 offset_right = 832.0
-offset_bottom = 204.0
+offset_bottom = 188.0
 theme_override_colors/font_outline_color = Color(0.2, 0.2, 0.2, 1)
 theme_override_font_sizes/bold_italics_font_size = 42
 theme_override_font_sizes/italics_font_size = 42
@@ -198,7 +198,7 @@ theme_override_font_sizes/normal_font_size = 42
 theme_override_font_sizes/bold_font_size = 42
 bbcode_enabled = true
 fit_content = true
-custom_effects = [SubResource("RichTextEffect_3pjip")]
+custom_effects = [SubResource("RichTextEffect_qjm3b")]
 script = ExtResource("5_d1tav")
 _forced_finish_delay = -0.0390041
 default_wait_time = 1.0

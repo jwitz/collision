@@ -3,8 +3,6 @@ var waitTime = 1
 signal ending_sequence_completed
 
 var messages := [
-	"This might have been your last cleaning sequence.",
-	"Until your last moment, you were of useful service.",
 	"Rest until your next recharge, should it come."
 ]
 
@@ -18,7 +16,18 @@ func _process(_delta: float) -> void:
 
 func _on_menu_game_over_text_sequence(percentage: float) -> void:
 	$Node2D/GameOverText.visible = true
+	var grade = ""
 	var startmessage = str("You cleaned ", percentage, "% of your space.")
+	if(percentage < 30):
+		grade = "Questionable"
+	elif(percentage >= 30 and percentage < 50):
+		grade = "Satisfactory"
+	elif(percentage >= 50 and percentage < 80):
+		grade = "Commendable"
+	elif(percentage >= 80 and percentage < 100):
+		grade = "Exemplary"
+	var grademessage = str("Your last charge protocol performance was: ", grade)
+	messages.insert(0, grademessage)
 	$Node2D/GameOverText.set_bbcode(startmessage)
 	await get_tree().create_timer(4.0).timeout
 	for n in range(0,messages.size()):

@@ -1,0 +1,17 @@
+[gd_scene load_steps=2 format=3 uid="uid://ccxqiuh0rsm4b"]
+
+[ext_resource type="Texture2D" uid="uid://bm1qy8qyu3j0j" path="res://wave.png" id="1_1chyu"]
+
+[node name="Node2D" type="Node2D"]
+scale = Vector2(3.4, 3.4)
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(-4.76837e-07, 9.53674e-07)
+scale = Vector2(0.426758, 0.426758)
+texture = ExtResource("1_1chyu")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="."]
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="StaticBody2D"]
+position = Vector2(21, -12)
+polygon = PackedVector2Array(3, -3, 26, -5, 50, 2, 74, 20, 97, 28, 135, 28, 174, 13, 206, -8, 226, -33, 234, -52, 235, 76, -277, 76, -277, 49, -272, 40, -258, 35, -250, 36, -240, 42, -226, 42, -210, 33, -194, 27, -175, 27, -158, 30, -130, 39, -95, 39, -63, 29, -37, 11, -19, 2)

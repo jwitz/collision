@@ -1,5 +1,6 @@
 using Godot;
 using System;
+using System.Threading.Tasks;
 
 public partial class Menu : CanvasLayer
 {
@@ -32,7 +33,8 @@ public partial class Menu : CanvasLayer
 		float percentage = (cleanFloat / totalFloat) * 100;
 
 		GetNode<Sprite2D>("Backdrop").Show();
-
+		await Task.Delay(TimeSpan.FromMilliseconds(200)); 
+		GD.Print("Setting backdrop");
 		EmitSignal(SignalName.GameOverTextSequence, percentage);
 
 	}

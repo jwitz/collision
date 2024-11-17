@@ -5,9 +5,9 @@ using System.Numerics;
 public partial class Player : CharacterBody2D
 {
 	[Export]
-    public int MaxSpeed { get; set; } = 70; // How fast the player will move (pixels/sec).
+    public int MaxSpeed { get; set; } = 90; // How fast the player will move (pixels/sec).
 	[Export]
-	public int Acceleration { get; set; } = 2; // How fast the player will accelerate
+	public int Acceleration { get; set; } = 4; // How fast the player will accelerate
 	public int Speed { get; set; } = 0; // How fast the player will move (pixels/sec).
 	[Export]
 	public float Deceleration = 0.20f; // How long it takes player to come to stop
@@ -51,9 +51,10 @@ public partial class Player : CharacterBody2D
 		FlickerTimer = GetNode<Timer>("FlickerTimer");
 	}
 
-	public void Start(Godot.Vector2 startPos)
+	public void Start(Godot.Vector2 startPos, float startRotation)
 	{
 		Position = startPos;
+		Rotation = startRotation;
 	}
 
 
@@ -194,7 +195,7 @@ public partial class Player : CharacterBody2D
 		{
 			TileMap currentTileMap = (TileMap) body;
 			Vector2I tileCoords = currentTileMap.GetCoordsForBodyRid(bodyRid);
-			GD.Print("Cleaning tile...");
+			// GD.Print("Cleaning tile...");
 			EmitSignal(SignalName.Clean, tileCoords.X, tileCoords.Y);
 			LastTile = bodyRid;
 		}
