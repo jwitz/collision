@@ -114,10 +114,8 @@ public partial class Main : Node2D
     public static Image ImageLoad(String filepath)
     {
         // var image = Image.LoadFromFile(ProjectSettings.GlobalizePath(filepath));
-        FileAccess file = FileAccess.Open(filepath, FileAccess.ModeFlags.Read);
-        Image image = new Image();
-        var imageBuffer = file.GetBuffer((long)file.GetLength());
-        image.LoadPngFromBuffer(imageBuffer);
+        CompressedTexture2D texture = (CompressedTexture2D)ResourceLoader.Load(filepath);
+        Image image = texture.GetImage();
         return image;
     }
 
