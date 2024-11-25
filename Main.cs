@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -113,7 +114,10 @@ public partial class Main : Node2D
     public static Image ImageLoad(String filepath)
     {
         // var image = Image.LoadFromFile(ProjectSettings.GlobalizePath(filepath));
-        var image = Image.LoadFromFile(OS.GetExecutablePath().GetBaseDir().PathJoin(filepath));
+        FileAccess file = FileAccess.Open(filepath, FileAccess.ModeFlags.Read);
+        Image image = new Image();
+        var imageBuffer = file.GetBuffer((long)file.GetLength());
+        image.LoadPngFromBuffer(imageBuffer);
         return image;
     }
 
@@ -309,7 +313,7 @@ public partial class Main : Node2D
     private void LoadImages()
     {
         List<Image> circleImage = new List<Image>();
-        var dir = DirAccess.Open("Circles");
+        var dir = DirAccess.Open("res://Circles");
         if (dir != null)
         {
             dir.ListDirBegin();
@@ -318,7 +322,7 @@ public partial class Main : Node2D
             {
                 if(fileName.EndsWith("png"))
                 {
-                    String fullPath = "Circles/" + fileName;
+                    String fullPath = "res://Circles/" + fileName;
                     Image loadImage = ImageLoad(fullPath);
                     loadImage.Resize(loadImage.GetWidth(), loadImage.GetHeight());
                     loadImage.Convert(Image.Format.Rgba8);
@@ -341,7 +345,7 @@ public partial class Main : Node2D
 
         // Load Go sprite
         Image goImage = new Image();
-        Image goLoadImage = ImageLoad("gosprite.png");
+        Image goLoadImage = ImageLoad("res://gosprite.png");
         goLoadImage.Resize(goLoadImage.GetWidth(), goLoadImage.GetHeight());
         goLoadImage.Convert(Image.Format.Rgba8);
         goImage = goLoadImage;
