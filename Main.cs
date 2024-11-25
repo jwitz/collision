@@ -22,7 +22,7 @@ public partial class Main : Node2D
 	public TileMap Area { get; set; }
 	public bool IsLoadBattery { get; set; } = false;
 	public int StartFlickerTime {get; set; } = 0;
-	public int ShaderLevel {get; set; } = 0;
+	public double ShaderLevel {get; set; } = 0;
 	public bool StartShaders { get; set; } = false;
 	private bool IsRestart { get; set; } = false;
 	private bool IsMusicSpeedingUp { get; set; } = false;
@@ -48,12 +48,12 @@ public partial class Main : Node2D
 			((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferPixel/PowerDownCanvasPixel/PowerDownPixel").Material).SetShaderParameter("size_y", (float)Math.Sin(ShaderLevel*.006)*.009);
 			((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferMirage/PowerDownCanvas/PowerDownMirage").Material).SetShaderParameter("frequency", ShaderLevel*.03);
 			((ShaderMaterial)GetNode<ColorRect>("Player/Camera/BackBufferMirage/PowerDownCanvas/PowerDownMirage").Material).SetShaderParameter("depth", ShaderLevel*.00016);
-			if (ShaderLevel == 100) {
+			if (ShaderLevel > 120) {
 				GetNode<Player>("Player").IsGameOver = true;
 			}
-			ShaderLevel++;
-			if (ShaderLevel == 400) {
-				GetNode<CanvasLayer>("Fade").Call("fade_out", 2);
+			ShaderLevel += delta * 120;
+			if (ShaderLevel > 360) {
+				GetNode<CanvasLayer>("Fade").Call("fade_out", 1);
 			}
 		}
 
@@ -62,7 +62,7 @@ public partial class Main : Node2D
 		if(IsMusicSpeedingUp == true && ShaderLevel <= 500) 
 		{
 			GetNode<AudioStreamPlayer>("Music").PitchScale += (float)0.0010;
-			ShaderLevel++;
+			ShaderLevel += delta * 120;
 		}
 	}
 

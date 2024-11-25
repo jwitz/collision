@@ -31,15 +31,15 @@
 [sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_31esk"]
 blend_mode = 3
 
-[sub_resource type="RichTextEffect" id="RichTextEffect_qf8kj"]
+[sub_resource type="RichTextEffect" id="RichTextEffect_wpdd5"]
 resource_name = "prickle"
 script = ExtResource("15_20gs5")
-metadata/rt = 1788216406938
+metadata/rt = 1809322144673
 
-[sub_resource type="RichTextEffect" id="RichTextEffect_jeg2w"]
+[sub_resource type="RichTextEffect" id="RichTextEffect_00k63"]
 resource_name = "fader"
 script = ExtResource("16_gthvb")
-metadata/rt = 1790045123490
+metadata/rt = 1811150861225
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_fapdi"]
 shader = ExtResource("8_6w5mm")
@@ -133,8 +133,7 @@ script = ExtResource("15_dwn12")
 [node name="Menu" parent="." instance=ExtResource("10_mde8c")]
 
 [node name="StartingText" parent="Menu/StartingTextLayer/Node2D" index="0"]
-theme_override_colors/font_outline_color = Color(0.2, 0.2, 0.2, 1)
-custom_effects = [SubResource("RichTextEffect_qf8kj")]
+custom_effects = [SubResource("RichTextEffect_wpdd5")]
 
 [node name="GameOverLayer" parent="Menu" index="6"]
 layer = 2
@@ -142,8 +141,7 @@ layer = 2
 [node name="GameOverText" parent="Menu/GameOverLayer/Node2D" index="0"]
 offset_top = 139.0
 offset_bottom = 196.0
-theme_override_colors/font_outline_color = Color(0.2, 0.2, 0.2, 1)
-custom_effects = [SubResource("RichTextEffect_jeg2w")]
+custom_effects = [SubResource("RichTextEffect_00k63")]
 
 [node name="Player" parent="." instance=ExtResource("1_gttkq")]
 position = Vector2(181, 224)
@@ -189,7 +187,7 @@ grow_vertical = 2
 
 [node name="BatteryTimer" type="Timer" parent="Player"]
 process_callback = 0
-wait_time = 40.0
+wait_time = 2.0
 
 [node name="FlickerTimer" type="Timer" parent="Player"]
 wait_time = 0.5
