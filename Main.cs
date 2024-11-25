@@ -1,6 +1,7 @@
 using Godot;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Numerics;
 using System.Threading.Tasks;
@@ -112,7 +113,9 @@ public partial class Main : Node2D
     // Helper function to avoid image load warning
     public static Image ImageLoad(String filepath)
     {
-        var image = Image.LoadFromFile(ProjectSettings.GlobalizePath(filepath));
+        // var image = Image.LoadFromFile(ProjectSettings.GlobalizePath(filepath));
+        CompressedTexture2D texture = (CompressedTexture2D)ResourceLoader.Load(filepath);
+        Image image = texture.GetImage();
         return image;
     }
 
@@ -340,7 +343,7 @@ public partial class Main : Node2D
 
         // Load Go sprite
         Image goImage = new Image();
-        Image goLoadImage = ImageLoad("res://Cutouts/gosprite.png");
+        Image goLoadImage = ImageLoad("res://gosprite.png");
         goLoadImage.Resize(goLoadImage.GetWidth(), goLoadImage.GetHeight());
         goLoadImage.Convert(Image.Format.Rgba8);
         goImage = goLoadImage;
