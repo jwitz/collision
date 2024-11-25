@@ -112,7 +112,8 @@ public partial class Main : Node2D
     // Helper function to avoid image load warning
     public static Image ImageLoad(String filepath)
     {
-        var image = Image.LoadFromFile(ProjectSettings.GlobalizePath(filepath));
+        // var image = Image.LoadFromFile(ProjectSettings.GlobalizePath(filepath));
+        var image = Image.LoadFromFile(OS.GetExecutablePath().GetBaseDir().PathJoin(filepath));
         return image;
     }
 
@@ -308,7 +309,7 @@ public partial class Main : Node2D
     private void LoadImages()
     {
         List<Image> circleImage = new List<Image>();
-        var dir = DirAccess.Open("res://Circles");
+        var dir = DirAccess.Open("Circles");
         if (dir != null)
         {
             dir.ListDirBegin();
@@ -317,7 +318,7 @@ public partial class Main : Node2D
             {
                 if(fileName.EndsWith("png"))
                 {
-                    String fullPath = "res://Circles/" + fileName;
+                    String fullPath = "Circles/" + fileName;
                     Image loadImage = ImageLoad(fullPath);
                     loadImage.Resize(loadImage.GetWidth(), loadImage.GetHeight());
                     loadImage.Convert(Image.Format.Rgba8);
@@ -340,7 +341,7 @@ public partial class Main : Node2D
 
         // Load Go sprite
         Image goImage = new Image();
-        Image goLoadImage = ImageLoad("res://Cutouts/gosprite.png");
+        Image goLoadImage = ImageLoad("gosprite.png");
         goLoadImage.Resize(goLoadImage.GetWidth(), goLoadImage.GetHeight());
         goLoadImage.Convert(Image.Format.Rgba8);
         goImage = goLoadImage;
